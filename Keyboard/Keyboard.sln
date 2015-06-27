@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keyboard", "Keyboard\Keyboard.csproj", "{4042C6CE-70E1-4C3A-9138-46797D586213}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4042C6CE-70E1-4C3A-9138-46797D586213}.Debug|x86.ActiveCfg = Debug|x86
+		{4042C6CE-70E1-4C3A-9138-46797D586213}.Debug|x86.Build.0 = Debug|x86
+		{4042C6CE-70E1-4C3A-9138-46797D586213}.Release|x86.ActiveCfg = Release|x86
+		{4042C6CE-70E1-4C3A-9138-46797D586213}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
