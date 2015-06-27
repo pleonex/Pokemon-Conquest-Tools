@@ -21,7 +21,7 @@
 using System;
 using System.IO;
 
-namespace Decrypt
+namespace Decrypter
 {
     public class Program
     {
@@ -29,7 +29,7 @@ namespace Decrypt
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Pokemon - Nobunaga Ambition");
+            Console.WriteLine("Pokemon - Nobunaga Ambition / Conquest");
             Console.WriteLine("Decrypter for MSG.DAT by pleoNeX");
 
             if (args.Length < 3) {
@@ -96,7 +96,7 @@ namespace Decrypt
                     blocks[i] = File.ReadAllBytes(currFile);
                     Encryption(blocks[i]);
                 }
-                    
+
                 WriteFile(blocks, fileOut);
             } else if (args[0] == "-ef") {
                 if (!File.Exists(fileIn)) {
@@ -121,7 +121,7 @@ namespace Decrypt
                         Encryption(blocks[i]);
                     }
                 }
-                    
+
                 WriteFile(blocks, fileOut);
             }
 
