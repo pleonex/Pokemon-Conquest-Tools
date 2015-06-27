@@ -22,11 +22,15 @@ using System;
 using System.Text;
 using System.IO;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace AmbitionText
 {
 	public class PNAWriter
 	{
+        static readonly string ProgramPath = Path.GetDirectoryName(
+            Assembly.GetExecutingAssembly().CodeBase);
+
 		List<byte> data;
 		string text;
 		int pos;
@@ -120,7 +124,7 @@ namespace AmbitionText
 		}
         private void Read_Table()
         {
-            string table_file = System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "table.tbl";
+            string table_file = Path.Combine(ProgramPath, "table.tbl");
             if (!File.Exists(table_file))
             {
                 useTable = false;

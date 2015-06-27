@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Reflection;
 
 
 namespace AmbitionText
@@ -32,12 +33,12 @@ namespace AmbitionText
 		byte[] data;
 		int pos;
 		string text;
-		byte currb;							// Current byte
+		byte currb;		// Current byte
 		
-		int end;							// If [R0,#0xA40] == 0 => Stop signal, store 0 and exit; Not always, check by the next offset
-		bool sjis2;							// If [R0,#0xA38] != 0 => First byte of SJS is 0x83, otherwise 0x82
-		bool furigana;						// If it's writting a furigana
-        bool sjis3;                         // Value [#0xA3C]
+		int end;		// If [R0,#0xA40] == 0 => Stop signal, store 0 and exit; Not always, check by the next offset
+		bool sjis2;		// If [R0,#0xA38] != 0 => First byte of SJS is 0x83, otherwise 0x82
+		bool furigana;	// If it's writting a furigana
+        bool sjis3;     // Value [#0xA3C]
 
         Dictionary<ushort, char> char_table;
         bool useTable;
@@ -52,6 +53,9 @@ namespace AmbitionText
 			0x7A, 0x7D, 0x7E, 0x80, 0x81, 0x82, 0x84, 0x86, 0x88, 0x89,
 			0x8A, 0x8B, 0x8C, 0x8D, 0x8F, 0x93
 		};
+
+        static readonly string ProgramPath = Path.GetDirectoryName(
+            Assembly.GetExecutingAssembly().CodeBase);
 
         void Error(string t)
         {
@@ -111,6 +115,7 @@ namespace AmbitionText
 			
 			Read_Text();
 		}
+
 		public PNAReader(byte[] fileIn, bool useTable)
 		{
             this.useTable = useTable;
@@ -129,9 +134,10 @@ namespace AmbitionText
 			
 			Read_Text();
 		}
+
         void Read_Table()
         {
-            string table_file = System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "table.tbl";
+            string table_file = Path.Combine(ProgramPath, "table.tbl");
             if (!File.Exists(table_file))
             {
                 useTable = false;

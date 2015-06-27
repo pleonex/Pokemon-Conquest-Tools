@@ -19,32 +19,33 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using System.Collections.Generic;
+using System.Reflection;
 
 namespace AmbitionText
 {
-	class Program
+	public static class Program
 	{
+        static readonly string ProgramPath = Path.GetDirectoryName(
+            Assembly.GetExecutingAssembly().CodeBase);
+
 		public static void Main(string[] args)
 		{
-			Console.WriteLine("Pokemon Nobunaga Ambition && Pokemon Conquest\nText extractor for MSG.DAT ~~ by pleoNeX\n");
-			if ((args.Length != 4 && args.Length != 3) || (args.Length == 4 && args[3] != "/nt"))
-			{
+            Console.WriteLine("Pokemon Nobunaga Ambition && Pokemon Conquest");
+            Console.WriteLine("Text extractor for MSG.DAT ~~ by pleoNeX\n");
+			if ((args.Length != 4 && args.Length != 3) ||
+                (args.Length == 4 && args[3] != "/nt")) {
+
 				Help();
 				return;
 			}
 
-            bool useTable = false;
-            if (File.Exists(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "table.tbl"))
-                useTable = true;
-			
-			if (args[0] == "-e")
-			{
-				if (!Directory.Exists(args[1]))
-				{
+            bool useTable = File.Exists(Path.Combine(ProgramPath, "table.tbl"));
+			if (args[0] == "-e") {
+				if (!Directory.Exists(args[1])) {
 					Console.WriteLine("Input doesn't exist");
 					return;
 				}
@@ -54,29 +55,22 @@ namespace AmbitionText
 				if (args[2][args[2].Length - 1] != Path.DirectorySeparatorChar)
 					args[2] += Path.DirectorySeparatorChar;
 				
-				foreach (string fileIn in Directory.GetFiles(args[1]))
-				{
+				foreach (string fileIn in Directory.GetFiles(args[1])) {
 					if (!fileIn.ToLower().EndsWith(".bin"))
 						continue;
 					
 					string fileOut = args[2] + Path.GetFileNameWithoutExtension(fileIn) + ".xml";
 					Export(fileIn, fileOut, useTable);
 				}
-			}
-			else if (args[0] == "-ef")
-			{
-				if (!File.Exists(args[1]))
-				{
+			} else if (args[0] == "-ef") {
+				if (!File.Exists(args[1])) {
 					Console.WriteLine("File in doesn't exist");
 					return;
 				}
 				
 				Export(args[1], args[2], useTable);
-			}
-			else if (args[0] == "-i")
-			{
-				if (!Directory.Exists(args[1]))
-				{
+			} else if (args[0] == "-i") {
+				if (!Directory.Exists(args[1])) {
 					Console.WriteLine("Input doesn't exist");
 					return;
 				}
@@ -86,22 +80,19 @@ namespace AmbitionText
 				if (args[2][args[2].Length - 1] != Path.DirectorySeparatorChar)
 					args[2] += Path.DirectorySeparatorChar;
 				
-				foreach (string fileIn in Directory.GetFiles(args[1]))
-				{
+				foreach (string fileIn in Directory.GetFiles(args[1])) {
 					if (!fileIn.ToLower().EndsWith(".xml"))
 						continue;
 					
 					string fileOut = args[2] + Path.GetFileNameWithoutExtension(fileIn) + ".bin";
 					Import(fileIn, fileOut, useTable);
 				}
-			}
-			else if (args[0] == "-if")
-			{
-				if (!File.Exists(args[1]))
-				{
+			} else if (args[0] == "-if") {
+				if (!File.Exists(args[1])) {
 					Console.WriteLine("File in doesn't exist");
 					return;
 				}
+
 				Import(args[1], args[2], useTable);
 			}
 			
@@ -110,7 +101,7 @@ namespace AmbitionText
 		
 		static void Help()
 		{
-			Console.WriteLine("Usage: AmbitionText.exe -Action In Out [/nt]");
+			Console.WriteLine("Usage: AmbitionText Action In Out [/nt]");
 			Console.WriteLine("Actions:");
 			Console.WriteLine("\t-e:\tExtract BIN files from In folder to Out folder");
 			Console.WriteLine("\t-ef:\tExtract In file to Out file");
@@ -123,12 +114,12 @@ namespace AmbitionText
             Console.ReadKey(true);
 		}
 		
-		static void Export(string fileIn, string fileOut)
+		private static void Export(string fileIn, string fileOut)
 		{
 		    Export(fileIn, fileOut, false);
 		}
 		
-		static void Export(string fileIn, string fileOut, bool useTable)
+		private static void Export(string fileIn, string fileOut, bool useTable)
 		{
 			byte[] data = File.ReadAllBytes(fileIn);
 			uint num_phrase = BitConverter.ToUInt32(data, 0);
@@ -153,16 +144,17 @@ namespace AmbitionText
 				
 				root.AppendChild(elem);
 			}
+
 			doc.AppendChild(root);
 			doc.Save(fileOut);
 		}
 		
-		static void Import(string fileIn, string fileOut)
+		private static void Import(string fileIn, string fileOut)
 		{
 		    Import(fileIn, fileOut, false);
 		}
 		
-		static void Import(string fileIn, string fileOut, bool useTable)
+		private static void Import(string fileIn, string fileOut, bool useTable)
 		{
 			if (File.Exists(fileOut))
 				File.Delete(fileOut);
@@ -170,28 +162,25 @@ namespace AmbitionText
 			BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 			
 			XmlDocument doc = new XmlDocument();
-            try
-            {
+            try {
                 doc.Load(fileIn);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error opening XML, probably it contains syntax errors:\n{0}", e.Message);
+            } catch (Exception e) {
+                Console.WriteLine("Error opening XML, probably it contains syntax errors:");
+                Console.WriteLine(e.Message);
                 return;
             }
+
 			XmlNode root = doc.ChildNodes[1];
 			
 			bw.Write(root.ChildNodes.Count);
 			
 			int offset = root.ChildNodes.Count * 4 + 4;
 			List<byte> buffer = new List<byte>();
-			for (int i = 0; i < root.ChildNodes.Count; i++)
-			{
+            for (int i = 0; i < root.ChildNodes.Count; i++) {
 				bw.Write(offset);
 				
 				string text = root.ChildNodes[i].InnerText;
-				if (text.Contains("\n"))
-				{
+				if (text.Contains("\n")) {
 					text = text.Remove(0, 5);
 					text = text.Remove(text.Length - 3);
 					text = text.Replace("\n    ", "\n");
@@ -205,83 +194,6 @@ namespace AmbitionText
 			bw.Write(buffer.ToArray());
 			bw.Flush();
 			bw.Close();
-		}
-		
-		static void Test(bool useTable)
-		{
-			foreach (string fileIn in Directory.GetFiles(@"G:\nds\projects\pcros\AmbitionText\bin\Debug\decrypted"))
-			{
-				byte[] data = File.ReadAllBytes(fileIn);
-				if (data.Length == 0)
-					continue;
-
-				uint num_phrase = BitConverter.ToUInt32(data, 0);
-				Console.WriteLine(fileIn);
-					
-				for (int i = 0; i < num_phrase; i++)
-				{
-					PNAReader pnar = new PNAReader(fileIn, i, useTable);
-					string text = pnar.Text;
-
-					PNAWriter pnaw = new PNAWriter(text, useTable);
-					byte[] new_data = pnaw.Data;
-					
-					pnar = new PNAReader(new_data, useTable);
-					string newText = pnar.Text;
-					
-					if (text != newText)
-					{
-						if (text.Length != newText.Length)
-							Console.WriteLine("ERROR: Text size is different.");
-
-						for (int j = 0; j < text.Length; j++)
-							if (text[j] != newText[j])
-								Console.WriteLine("ERROR: Different char at {0}", j.ToString());
-
-						Console.WriteLine("ERROR: Wrong text.");
-						Console.ReadKey(true);
-					}
-				}
-				Console.WriteLine("Done!");
-			}
-			Console.WriteLine("Finish");
-			Console.ReadKey(true);
-		}
-		static void Test2(bool useTable)
-		{
-			string fileIn = @"G:\nds\projects\pcros\AmbitionText\bin\Debug\decrypted\block0.bin";
-			//string fileOut = fileIn + ".xml";
-			
-			//Export(fileIn, fileOut);
-            //return;
-			
-				byte[] data = File.ReadAllBytes(fileIn);
-				uint num_phrase = BitConverter.ToUInt32(data, 0);
-
-				for (int i = 0; i < num_phrase; i++)
-				{
-					PNAReader pnar = new PNAReader(fileIn, i, useTable);
-					string text = pnar.Text;
-					
-					PNAWriter pnaw = new PNAWriter(text, useTable);
-					byte[] new_data = pnaw.Data;
-					
-					pnar = new PNAReader(new_data, useTable);
-					string newText = pnar.Text;
-					
-					if (text != newText)
-					{
-						if (text.Length != newText.Length)
-							Console.WriteLine();
-						for (int j = 0; j < text.Length; j++)
-							if (text[j] != newText[j])
-								Console.WriteLine();
-						Console.WriteLine("Wrong...");
-						Console.ReadKey(true);
-					}
-					else
-						Console.WriteLine("Ok x " + i.ToString());
-				}
 		}
 	}
 }
