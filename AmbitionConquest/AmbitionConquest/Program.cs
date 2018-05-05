@@ -26,7 +26,7 @@ namespace AmbitionConquest
     using Yarhl.FileFormat;
     using Yarhl.Media.Text;
     using Fonts;
-    using Text;
+    using Texts;
 
     static class MainClass
     {
@@ -46,6 +46,8 @@ namespace AmbitionConquest
             string outputPath = args[2];
 
             Console.Write($"[{type}] {inputPath} --> ");
+
+            BlockText2Po blockTextConverter = new BlockText2Po();
             switch (type) {
                 case "font_json":
                     NodeFactory.FromFile(inputPath)
@@ -61,15 +63,59 @@ namespace AmbitionConquest
                         .Save(outputPath);
                     break;
 
-                case "waza_text":
+                case "building":
+                    blockTextConverter.File = BlockTextFile.Building;
                     NodeFactory.FromFile(inputPath)
-                        .Transform<WazaPlainText2Binary, BinaryFormat, BinaryFormat>()
+                        .Transform<BinaryFormat, Po>(blockTextConverter)
+                        .Transform<BinaryFormat>()
                         .Stream.WriteTo(outputPath);
                     break;
-
-                case "waza_po":
+                case "eventspeaker":
+                    blockTextConverter.File = BlockTextFile.EventSpeaker;
                     NodeFactory.FromFile(inputPath)
-                        .Transform<Waza2Binary, BinaryFormat, Po>()
+                        .Transform<BinaryFormat, Po>(blockTextConverter)
+                        .Transform<BinaryFormat>()
+                        .Stream.WriteTo(outputPath);
+                    break;
+                case "gimmick":
+                    blockTextConverter.File = BlockTextFile.Gimmick;
+                    NodeFactory.FromFile(inputPath)
+                        .Transform<BinaryFormat, Po>(blockTextConverter)
+                        .Transform<BinaryFormat>()
+                        .Stream.WriteTo(outputPath);
+                    break;
+                case "item":
+                    blockTextConverter.File = BlockTextFile.Item;
+                    NodeFactory.FromFile(inputPath)
+                        .Transform<BinaryFormat, Po>(blockTextConverter)
+                        .Transform<BinaryFormat>()
+                        .Stream.WriteTo(outputPath);
+                    break;
+                case "kuni":
+                    blockTextConverter.File = BlockTextFile.Kuni;
+                    NodeFactory.FromFile(inputPath)
+                        .Transform<BinaryFormat, Po>(blockTextConverter)
+                        .Transform<BinaryFormat>()
+                        .Stream.WriteTo(outputPath);
+                    break;
+                case "saihai":
+                    blockTextConverter.File = BlockTextFile.Saihai;
+                    NodeFactory.FromFile(inputPath)
+                        .Transform<BinaryFormat, Po>(blockTextConverter)
+                        .Transform<BinaryFormat>()
+                        .Stream.WriteTo(outputPath);
+                    break;
+                case "tokusei":
+                    blockTextConverter.File = BlockTextFile.Tokusei;
+                    NodeFactory.FromFile(inputPath)
+                        .Transform<BinaryFormat, Po>(blockTextConverter)
+                        .Transform<BinaryFormat>()
+                        .Stream.WriteTo(outputPath);
+                    break;
+                case "waza":
+                    blockTextConverter.File = BlockTextFile.Waza;
+                    NodeFactory.FromFile(inputPath)
+                        .Transform<BinaryFormat, Po>(blockTextConverter)
                         .Transform<BinaryFormat>()
                         .Stream.WriteTo(outputPath);
                     break;

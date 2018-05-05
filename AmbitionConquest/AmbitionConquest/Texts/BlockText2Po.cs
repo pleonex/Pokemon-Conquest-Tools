@@ -1,5 +1,5 @@
 ﻿//
-//  Waza2Binary.cs
+//  BlockText2Po.cs
 //
 //  Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
@@ -18,25 +18,42 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-namespace AmbitionConquest.Text
+namespace AmbitionConquest.Texts
 {
     using System;
+    using System.Collections.Generic;
     using Mono.Addins;
     using Yarhl.FileFormat;
     using Yarhl.IO;
     using Yarhl.Media.Text;
 
     [Extension]
-    public class Waza2Binary : IConverter<BinaryFormat, Po>
+    public class BlockText2Po : IConverter<BinaryFormat, Po>
     {
-        const int TextSize = 0x0F;
-        const int DataSize = 0x15;
-        const int BlockSize = TextSize + DataSize;
+        static readonly IDictionary<BlockTextFile, Tuple<int, int>> FileInfo =
+            new Dictionary<BlockTextFile, Tuple<int, int>> {
+                { BlockTextFile.Building, new Tuple<int, int>(0x12, 0x12) },
+                { BlockTextFile.EventSpeaker, new Tuple<int, int>(0x10, 0x02) },
+                { BlockTextFile.Gimmick, new Tuple<int, int>(0x10, 0x18) },
+                { BlockTextFile.Item, new Tuple<int, int>(0x14, 0x10) },
+                { BlockTextFile.Kuni, new Tuple<int, int>(0x0A, 0x0E) },
+                { BlockTextFile.Saihai, new Tuple<int, int>(0x10, 0x0C) },
+                { BlockTextFile.Tokusei, new Tuple<int, int>(0x0E, 0x06) },
+                { BlockTextFile.Waza, new Tuple<int, int>(0x0F, 0x15) }
+        };
+
+        public BlockTextFile File { get; set; }
 
         public Po Convert(BinaryFormat source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+
+            if (!FileInfo.ContainsKey(File))
+                throw new FormatException("Unknown file type");
+
+            int textSize = FileInfo[File].Item1;
+            int dataSize = FileInfo[File].Item2;
 
             Po po = new Po {
                 Header = new PoHeader("Pokemon Conquest", "benito356@gmail.com") {
@@ -50,43 +67,11 @@ namespace AmbitionConquest.Text
             };
 
             while (!source.Stream.EndOfStream) {
-                po.Add(new PoEntry(reader.ReadString(TextSize).Replace("\0", "")));
-                source.Stream.Position += DataSize;
+                po.Add(new PoEntry(reader.ReadString(textSize).Replace("\0", "")));
+                source.Stream.Position += dataSize;
             }
 
             return po;
-        }
-    }
-
-    public class WazaPlainText2Binary : IConverter<BinaryFormat, BinaryFormat>
-    {
-        const int TextSize = 0x0F;
-        const int DataSize = 0x15;
-        const int BlockSize = TextSize + DataSize;
-
-        public BinaryFormat Convert(BinaryFormat source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            BinaryFormat textFormat = new BinaryFormat();
-            TextWriter writer = new TextWriter(textFormat.Stream);
-
-            DataReader reader = new DataReader(source.Stream) {
-                DefaultEncoding = new Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding("ascii")
-            };
-
-            source.Stream.Position = 0;
-            while (!source.Stream.EndOfStream) {
-                writer.WriteLine("[[");
-                writer.WriteLine(reader.ReadString(TextSize).Replace("\0", ""));
-                writer.WriteLine("]]");
-                writer.WriteLine();
-                writer.WriteLine();
-                source.Stream.Position += DataSize;
-            }
-
-            return textFormat;
         }
     }
 }
