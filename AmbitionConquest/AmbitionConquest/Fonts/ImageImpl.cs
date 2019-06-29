@@ -1,9 +1,9 @@
-// Font.cs
+// ImageImpl.cs
 //
 // Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
 //
-// Copyright (c) 2018 Benito Palacios Sanchez
+// Copyright (c) 2019 Benito Palacios Sanchez
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,17 +19,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>
 namespace AmbitionConquest.Fonts
 {
-    using System.Collections.Generic;
-    using Yarhl.FileFormat;
+    using System.Drawing;
 
-    public class Font : IFormat
+    public class ImageImpl : IImage
     {
-        public Font()
+        public ImageImpl(Image image)
         {
-            Glyphs = new List<Glyph>();
+            Image = image;
         }
 
-        public IList<Glyph> Glyphs {
+        public Image Image {
             get;
             private set;
         }

@@ -1,34 +1,32 @@
-﻿//
-//  BlockText2Po.cs
+﻿// BlockText2Po.cs
 //
-//  Author:
+// Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
 //
-//  Copyright (c) 2018 Benito Palacios Sanchez
+// Copyright (c) 2018 Benito Palacios Sanchez
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace AmbitionConquest.Texts
 {
     using System;
     using System.Collections.Generic;
-    using Mono.Addins;
     using Yarhl.FileFormat;
     using Yarhl.IO;
     using Yarhl.Media.Text;
+    using Yarhl.Media.Text.Encodings;
 
-    [Extension]
-    public class BlockText2Po : IConverter<BinaryFormat, Po>
+    public class BlockText2Po : IInitializer<BlockTextFile>, IConverter<BinaryFormat, Po>
     {
         static readonly IDictionary<BlockTextFile, Tuple<int, int>> FileInfo =
             new Dictionary<BlockTextFile, Tuple<int, int>> {
@@ -39,10 +37,15 @@ namespace AmbitionConquest.Texts
                 { BlockTextFile.Kuni, new Tuple<int, int>(0x0A, 0x0E) },
                 { BlockTextFile.Saihai, new Tuple<int, int>(0x10, 0x0C) },
                 { BlockTextFile.Tokusei, new Tuple<int, int>(0x0E, 0x06) },
-                { BlockTextFile.Waza, new Tuple<int, int>(0x0F, 0x15) }
+                { BlockTextFile.Waza, new Tuple<int, int>(0x0F, 0x15) },
         };
 
-        public BlockTextFile File { get; set; }
+        public BlockTextFile File { get; private set; }
+
+        public void Initialize(BlockTextFile param)
+        {
+            File = param;
+        }
 
         public Po Convert(BinaryFormat source)
         {
@@ -56,18 +59,15 @@ namespace AmbitionConquest.Texts
             int dataSize = FileInfo[File].Item2;
 
             Po po = new Po {
-                Header = new PoHeader("Pokemon Conquest", "benito356@gmail.com") {
-                    Language = "en-US",
-                    LanguageTeam = "GradienWords",
-                }
+                Header = new PoHeader("Pokemon Conquest", "benito356@gmail.com", "en-US"),
             };
 
             DataReader reader = new DataReader(source.Stream) {
-                DefaultEncoding = new Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding("ascii")
+                DefaultEncoding = new EscapeOutRangeEncoding("ascii"),
             };
 
             while (!source.Stream.EndOfStream) {
-                po.Add(new PoEntry(reader.ReadString(textSize).Replace("\0", "")));
+                po.Add(new PoEntry(reader.ReadString(textSize).Replace("\0", string.Empty)));
                 source.Stream.Position += dataSize;
             }
 

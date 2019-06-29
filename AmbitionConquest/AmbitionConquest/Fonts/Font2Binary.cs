@@ -1,39 +1,36 @@
-﻿//
-//  Font2Binary.cs
+﻿// Font2Binary.cs
 //
-//  Author:
+// Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
 //
-//  Copyright (c) 2018 Benito Palacios Sanchez
+// Copyright (c) 2018 Benito Palacios Sanchez
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace AmbitionConquest.Fonts
 {
     using System;
     using System.Drawing;
-    using Mono.Addins;
     using Yarhl.FileFormat;
     using Yarhl.IO;
 
-    [Extension]
-    public class Font2Binary : IConverter<BinaryFormat, Font>
+    public class Font2Binary : IConverter<IBinary, Font>
     {
-        const int CharWidth = 28;
-        const int CharHeight = 19;
-        const int CharSize = 68; // 1 byte for width + (28 * 19 / 8 ~~ 67)
+        const int GlyphWidth = 28;
+        const int GlyphHeight = 19;
+        const int GlyphSize = 68; // 1 byte for width + (28 * 19 / 8 ~~ 67)
 
-        public Font Convert(BinaryFormat source)
+        public Font Convert(IBinary source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -54,28 +51,35 @@ namespace AmbitionConquest.Fonts
                 glyph.CharCode = reader.ReadUInt16();
 
                 // Get the image
-                source.Stream.Position = 0x1CC + (i * CharSize);
+                source.Stream.Position = 0x1CC + (i * GlyphSize);
                 glyph.Width = reader.ReadByte();
-                glyph.Image = new Color[CharWidth, CharHeight];
-
-                byte buffer = 0;
-                byte bufferSize = 0;
-                for (int y = 0; y < CharHeight; y++) {
-                    for (int x = 0; x < CharWidth; x++, bufferSize--) {
-                        if (bufferSize == 0) {
-                            buffer = reader.ReadByte();
-                            bufferSize = 8;
-                        }
-
-                        glyph.Image[x, y] = (((buffer >> (bufferSize - 1)) & 1) == 1) ?
-                            Color.Black : Color.White;
-                    }
-                }
-
+                glyph.Image = ReadGlyph(source.Stream);
                 font.Glyphs.Add(glyph);
             }
 
             return font;
+        }
+
+        Color[,] ReadGlyph(DataStream stream)
+        {
+            var glyph = new Color[GlyphWidth, GlyphHeight];
+
+            byte buffer = 0;
+            byte bufferSize = 0;
+            for (int y = 0; y < GlyphHeight; y++) {
+                for (int x = 0; x < GlyphWidth; x++, bufferSize--) {
+                    if (bufferSize == 0) {
+                        buffer = stream.ReadByte();
+                        bufferSize = 8;
+                    }
+
+                    glyph[x, y] = (((buffer >> (bufferSize - 1)) & 1) == 1)
+                        ? Color.Black
+                        : Color.White;
+                }
+            }
+
+            return glyph;
         }
     }
 }

@@ -1,32 +1,29 @@
+// Font2Image.cs
 //
-//  Font2Image.cs
-//
-//  Author:
+// Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
 //
-//  Copyright (c) 2018 Benito Palacios Sanchez
+// Copyright (c) 2018 Benito Palacios Sanchez
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace AmbitionConquest.Fonts
 {
     using System;
     using System.Drawing;
-    using Mono.Addins;
     using Yarhl.FileFormat;
 
-    [Extension]
-    public class Font2Image : IConverter<Font, Image>
+    public class Font2Image : IConverter<Font, IImage>
     {
         const int CharWidth = 28;
         const int CharHeight = 19;
@@ -35,7 +32,7 @@ namespace AmbitionConquest.Fonts
         const int BorderThickness = 2;
         static readonly Pen BorderPen = new Pen(Color.Olive, BorderThickness);
 
-        public Image Convert(Font source)
+        public IImage Convert(Font source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -47,8 +44,8 @@ namespace AmbitionConquest.Fonts
             int numRows = (int)Math.Ceiling((double)numChars / numColumns);
 
             // Char width + border from one side + border from the other side only at the end
-            int width = numColumns * CharWidth + (numColumns + 1) * BorderThickness;
-            int height = numRows * CharHeight + (numRows + 1) * BorderThickness;
+            int width = (numColumns * CharWidth) + ((numColumns + 1) * BorderThickness);
+            int height = (numRows * CharHeight) + ((numRows + 1) * BorderThickness);
 
             Bitmap image = new Bitmap(width, height);
             Graphics graphic = Graphics.FromImage(image);
@@ -56,8 +53,7 @@ namespace AmbitionConquest.Fonts
             // Draw chars
             for (int r = 0; r < numRows; r++) {
                 for (int c = 0; c < numColumns; c++) {
-
-                    int index = r * numColumns + c; // Index of the glyph
+                    int index = (r * numColumns) + c; // Index of the glyph
                     if (index >= numChars)
                         break;
 
@@ -83,7 +79,7 @@ namespace AmbitionConquest.Fonts
             }
 
             graphic.Dispose();
-            return image;
+            return new ImageImpl(image);
         }
 
         static Bitmap GlyphToImage(Glyph glyph)
