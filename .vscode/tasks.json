@@ -5,7 +5,7 @@
     "tasks": [
         {
             "label": "build",
-            "command": "dotnet build AmbitionConquest\\AmbitionConquest.sln",
+            "command": "dotnet build AmbitionConquest\\AmbitionConquest.csproj",
             "type": "shell",
             "group": {
                 "kind": "build",

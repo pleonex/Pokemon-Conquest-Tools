@@ -24,13 +24,13 @@ namespace AmbitionConquest.Fonts
     using Yarhl.FileFormat;
     using Yarhl.IO;
 
-    public class Font2Binary : IConverter<IBinary, Font>
+    public class Font2Binary : IConverter<BinaryFormat, Font>
     {
         const int GlyphWidth = 28;
         const int GlyphHeight = 19;
         const int GlyphSize = 68; // 1 byte for width + (28 * 19 / 8 ~~ 67)
 
-        public Font Convert(IBinary source)
+        public Font Convert(BinaryFormat source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
