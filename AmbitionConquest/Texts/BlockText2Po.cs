@@ -67,7 +67,8 @@ namespace AmbitionConquest.Texts
             };
 
             while (!source.Stream.EndOfStream) {
-                po.Add(new PoEntry(reader.ReadString(textSize).Replace("\0", string.Empty)));
+                string segment = reader.ReadString(textSize).Replace("\0", string.Empty);
+                po.Add(new PoEntry(segment));
                 source.Stream.Position += dataSize;
             }
 
