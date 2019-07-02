@@ -51,9 +51,13 @@
     <Compile Include="Fonts\Font2Image.cs" />
     <Compile Include="Texts\BlockText2Po.cs" />
     <Compile Include="Texts\BlockTextFile.cs" />
+    <Compile Include="Texts\Msg2Container.cs" />
+    <Compile Include="Texts\Msg2Po.cs" />
+    <Compile Include="Texts\MessageBlock.cs" />
+    <Compile Include="Texts\Message.cs" />
+    <Compile Include="Texts\Msg2Bin.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Text\" />
     <Folder Include="Font\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

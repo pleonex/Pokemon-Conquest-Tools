@@ -21,6 +21,7 @@
 namespace AmbitionConquest
 {
     using System;
+    using System.IO;
     using System.Reflection;
     using Yarhl.FileSystem;
     using Yarhl.FileFormat;
@@ -61,6 +62,17 @@ namespace AmbitionConquest
                         .Transform<Font2Binary, BinaryFormat, Font>().Format
                         .ConvertWith<Font2Image, Font, System.Drawing.Image>()
                         .Save(outputPath);
+                    break;
+
+                case "msg":
+                    var messages = NodeFactory.FromFile(inputPath)
+                        .Transform<Msg2Container, BinaryFormat, NodeContainerFormat>();
+                    foreach (var msg in messages.Children) {
+                        msg.Transform<Msg2Bin, BinaryFormat, MessageBlock>()
+                            .Transform<Po>()
+                            .Transform<BinaryFormat>()
+                            .Stream.WriteTo(Path.Combine(outputPath, msg.Name + ".po"));
+                    }
                     break;
 
                 case "building":

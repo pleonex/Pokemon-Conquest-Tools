@@ -321,6 +321,7 @@ namespace AmbitionText
 			
 			switch (id)
 			{
+                //50
 				case 0x00:
 					byte c0 = data[pos++];
                     if (c0 < 0x20)
@@ -337,7 +338,7 @@ namespace AmbitionText
                     else
                         Error("Case 0 - Var");
 					break;
-					
+					//60
 				case 0x01:
 					byte c1 = data[pos++];
                     if (c1 < 0x20)
@@ -350,7 +351,7 @@ namespace AmbitionText
                     else
                         Error("Case 1 - Var");
 					break;
-					
+					//70
 				case 0x02:
 					byte c2 = data[pos++];
                     if (c2 < 0x20)
@@ -375,7 +376,7 @@ namespace AmbitionText
                     else
                         Error("Case 2 - Var");
 					break;
-					
+					//80
 				case 0x03:
 					byte c3 = data[pos++];
                     if (c3 < 0x20)
@@ -398,7 +399,7 @@ namespace AmbitionText
                     else
                         Error("Case 3 - Var");
 					break;
-					
+					//110
 				case 0x04:
 					byte c4 = data[pos++];
                     if (c4 < 0x20)
@@ -419,7 +420,7 @@ namespace AmbitionText
                     else
                         Error("Case 4 - Var");
 					break;
-
+                    //90
 				case 0x05:
 					byte c5 = data[pos++];
                     if (c5 < 0x20)
@@ -442,7 +443,7 @@ namespace AmbitionText
                     else
                         Error("Case 5 - Var");
 					break;
-
+                    //100
 				case 0x06:
 					byte c6 = data[pos++];
                     if (c6 < 0x20)
@@ -463,7 +464,7 @@ namespace AmbitionText
                     else
                         Error("Case 6 - Var");
 					break;
-
+                    //120
 				case 0x07:
 					byte c7 = data[pos++];
                     if (c7 < 0x20)
@@ -484,7 +485,7 @@ namespace AmbitionText
                     else
                         Error("Case 7 - Var");
 					break;
-
+                    //200
 				case 0x08:
 					if (b2 == 3)
 						text += "{Name}";

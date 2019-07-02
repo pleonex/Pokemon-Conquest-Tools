@@ -1,5 +1,5 @@
 ﻿//
-//  AssemblyInfo.cs
+//  Message.cs
 //
 //  Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
@@ -18,28 +18,26 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using Mono.Addins;
+namespace AmbitionConquest.Texts
+{
+    using System.Text;
 
-[assembly: AssemblyTitle("AmbitionConquest")]
-[assembly: AssemblyDescription("Tool to export Pokemon Conquest files")]
-[assembly: AssemblyCompany("GradienWords")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("2018 (c) Benito Palacios Sanchez (pleonex)")]
-[assembly: AssemblyVersion("0.2.0")]
-[assembly: AssemblyFileVersion("0.2.0")]
-[assembly: CLSCompliant(true)]
-[assembly: ComVisible(true)]
+    public class Message
+    {
+        public Message()
+        {
+            Text = new StringBuilder();
+        }
 
+        public int ID { get; set; }
 
-#if DEBUG
-[assembly: AssemblyConfiguration("Debug")]
-#elif RELEASE
-[assembly: AssemblyConfiguration("Release")]
-#endif
+        public StringBuilder Text { get; set; }
 
-// Mono.Addins
-[assembly: Addin("AmbitionConquest", "0.2")]
-[assembly: AddinDependency("Yarhl", "1.0")]
+        public bool MultiText { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("[Message: ID={0}, Text={1}]", ID, Text);
+        }
+    }
+}
