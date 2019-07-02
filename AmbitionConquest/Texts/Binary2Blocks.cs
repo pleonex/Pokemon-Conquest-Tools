@@ -1,4 +1,4 @@
-// Binary2SceneDialogs.cs
+// Binary2Blocks.cs
 //
 // Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
@@ -20,40 +20,45 @@
 namespace AmbitionConquest.Texts
 {
     using System;
+    using System.Collections.Generic;
     using Yarhl.FileFormat;
+    using Yarhl.FileSystem;
     using Yarhl.IO;
 
-    public class Binary2SceneDialogs : IConverter<BinaryFormat, SceneDialogs>
+    public class Binary2Blocks : IConverter<BinaryFormat, NodeContainerFormat>
     {
-        public SceneDialogs Convert(BinaryFormat source)
+        public NodeContainerFormat Convert(BinaryFormat source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            var dialogs = new SceneDialogs();
-            var reader = new DataReader(source.Stream) {
-                DefaultEncoding = new PnaEncoding(),
-            };
+            NodeContainerFormat container = new NodeContainerFormat();
+            DataReader reader = new DataReader(source.Stream);
 
-            uint numDialogs = reader.ReadUInt32();
-            for (int i = 0; i < numDialogs; i++) {
-                // Get offset and size
-                source.Stream.Position = (i + 1) * 4;
+            int count = 0;
+            while (source.Stream.Position < source.Stream.Length) {
+                // Read FAT
+                source.Stream.Position = count * 8;
                 uint offset = reader.ReadUInt32();
+                if (offset == 0)
+                    break;
 
-                int size;
-                if (i + 1 == numDialogs) {
-                    size = (int)(source.Stream.Length - offset);
-                } else {
-                    size = (int)(reader.ReadUInt32() - offset);
-                }
+                int size = reader.ReadInt32();
 
-                // Read with our custom encoding
+                // Get encrypted data and decrypt
                 source.Stream.Position = offset;
-                dialogs.Add(reader.ReadString(size));
+                byte[] data = reader.ReadBytes(size);
+                Encryption.Run(data);
+
+                // Create the child
+                Node child = NodeFactory.FromMemory($"block{count}.bin");
+                child.Stream.Write(data, 0, data.Length);
+                container.Root.Add(child);
+
+                count++;
             }
 
-            return dialogs;
+            return container;
         }
     }
 }

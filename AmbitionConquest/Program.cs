@@ -20,6 +20,7 @@
 namespace AmbitionConquest
 {
     using System;
+    using System.IO;
     using System.Reflection;
     using AmbitionConquest.Fonts;
     using AmbitionConquest.Texts;
@@ -44,10 +45,22 @@ namespace AmbitionConquest
             string inputPath = args[1];
             string outputPath = args[2];
 
-            Console.Write($"[{type}] {inputPath} --> ");
+            Console.WriteLine($"[{type}] {inputPath} --> {outputPath}");
 
             switch (type) {
-                case "font_json":
+                case "msg":
+                    var messages = NodeFactory.FromFile(inputPath)
+                        .TransformWith<Binary2Blocks>();
+                    foreach (var msg in messages.Children) {
+                        msg.TransformWith<Binary2BlockMessages>()
+                            .TransformWith<BlockMessages2Po>()
+                            .TransformWith<Po2Binary>()
+                            .Stream.WriteTo(Path.Combine(outputPath, msg.Name + ".pot"));
+                    }
+
+                break;
+
+                case "font_yaml":
                     NodeFactory.FromFile(inputPath)
                         .TransformTo<Font>()
                         .TransformWith<Font2Yaml>()

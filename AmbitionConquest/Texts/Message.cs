@@ -1,9 +1,9 @@
-// SceneDialogs.cs
+// Message.cs
 //
 // Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
 //
-// Copyright (c) 2019 Benito Palacios Sanchez
+// Copyright (c) 2018 Benito Palacios Sanchez
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,28 +19,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace AmbitionConquest.Texts
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using Yarhl.FileFormat;
-
-    public class SceneDialogs : IFormat
+    public class Message
     {
-        readonly IList<string> dialogs;
+        public int GroupId { get; set; }
 
-        public SceneDialogs()
-        {
-            dialogs = new List<string>();
-            Dialogs = new ReadOnlyCollection<string>(dialogs);
-        }
+        public int ElementId { get; set; }
 
-        public ReadOnlyCollection<string> Dialogs {
-            get;
-            private set;
-        }
-
-        public void Add(string dialog)
-        {
-            dialogs.Add(dialog);
-        }
+        public string Text { get; set; }
     }
 }
