@@ -1,4 +1,4 @@
-﻿// Program.cs
+// Program.cs
 //
 // Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
@@ -50,14 +50,14 @@ namespace AmbitionConquest
                 case "font_json":
                     NodeFactory.FromFile(inputPath)
                         .TransformTo<Font>()
-                        .TransformWith<Font2Json>()
+                        .TransformWith<Font2Yaml>()
                         .Stream.WriteTo(outputPath);
                     break;
 
                 case "font_image":
                     NodeFactory.FromFile(inputPath)
-                        .TransformTo<Font>()
-                        .TransformTo<IImage>()
+                        .TransformWith<Font2Binary>()
+                        .TransformWith<Font2Image>()
                         .GetFormatAs<IImage>().Image.Save(outputPath);
                     break;
 

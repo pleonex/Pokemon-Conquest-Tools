@@ -26,7 +26,7 @@ namespace AmbitionConquest.Fonts
     using Yarhl.FileFormat;
     using Yarhl.IO;
 
-    public class Font2Json : IConverter<Font, BinaryFormat>
+    public class Font2Yaml : IConverter<Font, BinaryFormat>
     {
         public BinaryFormat Convert(Font source)
         {
