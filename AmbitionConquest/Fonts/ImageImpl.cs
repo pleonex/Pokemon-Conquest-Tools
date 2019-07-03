@@ -23,14 +23,9 @@ namespace AmbitionConquest.Fonts
 
     public class ImageImpl : IImage
     {
-        public ImageImpl(Image image)
-        {
-            Image = image;
-        }
-
         public Image Image {
             get;
-            private set;
+            set;
         }
     }
 }

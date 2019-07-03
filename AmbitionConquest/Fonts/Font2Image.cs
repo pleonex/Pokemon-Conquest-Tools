@@ -79,7 +79,7 @@ namespace AmbitionConquest.Fonts
             }
 
             graphic.Dispose();
-            return new ImageImpl(image);
+            return new ImageImpl { Image = image };
         }
 
         static Bitmap GlyphToImage(Glyph glyph)
