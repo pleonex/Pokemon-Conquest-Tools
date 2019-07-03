@@ -52,10 +52,11 @@ namespace AmbitionConquest
                     var messages = NodeFactory.FromFile(inputPath)
                         .TransformWith<Binary2Blocks>();
                     foreach (var msg in messages.Children) {
+                        string name = Path.GetFileNameWithoutExtension(msg.Name);
                         msg.TransformWith<Binary2BlockMessages>()
                             .TransformWith<BlockMessages2Po>()
                             .TransformWith<Po2Binary>()
-                            .Stream.WriteTo(Path.Combine(outputPath, msg.Name + ".pot"));
+                            .Stream.WriteTo(Path.Combine(outputPath, name + ".pot"));
                     }
 
                 break;

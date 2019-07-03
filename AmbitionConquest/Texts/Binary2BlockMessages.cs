@@ -52,11 +52,9 @@ namespace AmbitionConquest.Texts
                 source.Stream.Position = offset;
                 int elementId = 0;
                 while (source.Stream.Position < endOffset) {
-                    Message msg = new Message {
-                        GroupId = i,
-                        ElementId = elementId++,
-                        Text = pnaReader.ReadString(),
-                    };
+                    Message msg = pnaReader.ReadMessage();
+                    msg.GroupId = i;
+                    msg.ElementId = elementId++;
                     dialogs.Add(msg);
                 }
 

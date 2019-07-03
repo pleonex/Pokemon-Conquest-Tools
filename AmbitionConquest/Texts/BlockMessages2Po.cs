@@ -42,6 +42,7 @@ namespace AmbitionConquest.Texts
                 po.Add(new PoEntry {
                     Original = message.Text,
                     Context = $"group:{message.GroupId},id:{message.ElementId}",
+                    ExtractedComments = $"context:{message.Context},box:{message.BoxConfig}",
                     Flags = "max-length:9999,c-format,brace-format",
                 });
             }

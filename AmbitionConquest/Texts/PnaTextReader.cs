@@ -36,18 +36,28 @@ namespace AmbitionConquest.Texts
 
         readonly DataStream stream;
 
+        StringBuilder textBuilder;
+        StringBuilder contextBuilder;
+        StringBuilder boxBuilder;
         StringBuilder builder;
         bool kanjiSingleByteMode;
         bool kanjiPage2Mode;
         bool furiganaMode;
         bool endString;
 
+        static PnaTextReader()
+        {
+            // Make sure that the shift-jis encoding is initialized in
+            // .NET Core
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         public PnaTextReader(DataStream stream)
         {
             this.stream = stream;
         }
 
-        public string ReadString()
+        public Message ReadMessage()
         {
             Reset();
 
@@ -62,7 +72,13 @@ namespace AmbitionConquest.Texts
                     ParseJapaneseText(data);
             }
 
-            return builder.ToString();
+            Message msg = new Message {
+                Text = builder.ToString(),
+                Context = contextBuilder.ToString(),
+                BoxConfig = boxBuilder.ToString(),
+            };
+
+            return msg;
         }
 
         static string GetJapaneseString(params byte[] data)
@@ -72,15 +88,25 @@ namespace AmbitionConquest.Texts
 
         void Reset()
         {
-            builder = new StringBuilder();
+            textBuilder = new StringBuilder();
+            contextBuilder = new StringBuilder();
+            boxBuilder = new StringBuilder();
+            builder = contextBuilder;
             kanjiSingleByteMode = false;
             kanjiPage2Mode = false;
             furiganaMode = false;
             endString = false;
         }
 
+        void SetTextBuilder()
+        {
+            builder = textBuilder;
+        }
+
         void ParseAsciiText(byte ch)
         {
+            SetTextBuilder();
+
             if ((ch >= 0x81 && ch <= 0x9F) || (ch >= 0xE0 && ch <= 0xFC)) {
                 // Japanese kanji
                 byte ch2 = stream.ReadByte();
@@ -93,6 +119,8 @@ namespace AmbitionConquest.Texts
 
         void ParseJapaneseText(byte ch)
         {
+            SetTextBuilder();
+
             if (kanjiSingleByteMode) {
                 builder.Append(GetJapaneseString(ch));
                 return;
@@ -127,11 +155,17 @@ namespace AmbitionConquest.Texts
             kanjiPage2Mode = false;
 
             switch (control) {
+                case 0x00:
+                    builder.Append("{close}");
+                    endString = true;
+                    break;
+
                 case 0x01:
                     ParseTextStart();
                     break;
 
                 case 0x02:
+                    SetTextBuilder();
                     ParseVariables(control);
                     break;
 
@@ -155,6 +189,7 @@ namespace AmbitionConquest.Texts
             if (code == 0x22) {
                 // Means start of literals
                 // Added when starting SJIS or ASCII text, needs after variable
+                builder = boxBuilder;
             } else if (code == 0x53) {
                 builder.Append("{multi-start:");
                 ParseVariables(stream.ReadByte());
@@ -202,6 +237,7 @@ namespace AmbitionConquest.Texts
                     break;
 
                 case 0x63:
+                    SetTextBuilder();
                     byte color = stream.ReadByte();
                     builder.Append($"{{color:{color}}}");
                     break;
@@ -218,6 +254,7 @@ namespace AmbitionConquest.Texts
 
                 // Indicate the start or end of the furigana
                 case 0x72:
+                    SetTextBuilder();
                     furiganaMode = !furiganaMode;
                     builder.Append(furiganaMode ? "[" : "]");
                     break;
@@ -228,6 +265,7 @@ namespace AmbitionConquest.Texts
                     break;
 
                 case 0x77:
+                    SetTextBuilder();
                     byte wait = stream.ReadByte();
                     builder.Append($"{{wait:{wait}}}");
                     break;
@@ -308,8 +346,8 @@ namespace AmbitionConquest.Texts
                     break;
 
                 case 11:
-                    if (index == 100 && modulo == 0)
-                        builder.Append("{area}");
+                    if (index == 100)
+                        builder.Append($"{{area:{modulo}}}");
                     else
                         throw new FormatException("Unknown variable group 11");
                     break;
@@ -322,8 +360,10 @@ namespace AmbitionConquest.Texts
                     break;
 
                 case 20:
-                    // 0 and 1 also call ParseExpression
-                    if (modulo == 2)
+                    // 0 also call ParseExpression
+                    if (modulo == 1)
+                        builder.Append($"{{param:{ParseExpression()}}}");
+                    else if (modulo == 2)
                         builder.Append($"{{commander:{ParseExpression()}}}");
                     else if (modulo == 3)
                         builder.Append("{name_blue}");

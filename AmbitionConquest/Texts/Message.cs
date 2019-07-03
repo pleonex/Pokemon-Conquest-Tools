@@ -26,5 +26,9 @@ namespace AmbitionConquest.Texts
         public int ElementId { get; set; }
 
         public string Text { get; set; }
+
+        public string Context { get; set; }
+
+        public string BoxConfig { get; set; }
     }
 }
