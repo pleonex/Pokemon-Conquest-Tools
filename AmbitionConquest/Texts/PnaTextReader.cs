@@ -73,7 +73,7 @@ namespace AmbitionConquest.Texts
             }
 
             Message msg = new Message {
-                Text = builder.ToString(),
+                Text = textBuilder.ToString(),
                 Context = contextBuilder.ToString(),
                 BoxConfig = boxBuilder.ToString(),
             };

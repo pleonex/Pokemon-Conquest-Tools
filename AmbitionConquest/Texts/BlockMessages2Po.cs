@@ -35,8 +35,10 @@ namespace AmbitionConquest.Texts
             };
 
             foreach (var message in source.Messages) {
-                if (string.IsNullOrEmpty(message.Text)) {
+                if (message.IsEmpty) {
                     continue;
+                } else if (string.IsNullOrEmpty(message.Text)) {
+                    message.Text = "<empty>";
                 }
 
                 po.Add(new PoEntry {

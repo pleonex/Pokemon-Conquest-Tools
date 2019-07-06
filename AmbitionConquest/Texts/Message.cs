@@ -30,5 +30,13 @@ namespace AmbitionConquest.Texts
         public string Context { get; set; }
 
         public string BoxConfig { get; set; }
+
+        public bool IsEmpty {
+            get {
+                return string.IsNullOrEmpty(Text)
+                    && string.IsNullOrEmpty(Context)
+                    && string.IsNullOrEmpty(BoxConfig);
+            }
+        }
     }
 }
