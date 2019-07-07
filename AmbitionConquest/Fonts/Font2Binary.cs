@@ -20,15 +20,27 @@
 namespace AmbitionConquest.Fonts
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using Yarhl.FileFormat;
     using Yarhl.IO;
 
-    public class Font2Binary : IConverter<BinaryFormat, Font>
+    public class Font2Binary :
+        IInitializer<FontKind>,
+        IConverter<BinaryFormat, Font>
     {
-        const int GlyphWidth = 28;
-        const int GlyphHeight = 19;
-        const int GlyphSize = 68; // 1 byte for width + (28 * 19 / 8 ~~ 67)
+        static readonly Dictionary<FontKind, FontInfo> Info = new Dictionary<FontKind, FontInfo> {
+            { FontKind.Debug, new FontInfo(28, 19, 0x28, 0x1CC) },
+            { FontKind.Small, new FontInfo(8, 11, 0x87D8, 0x8B20) },
+            { FontKind.Normal, new FontInfo(10, 14, 0x897C, 0x94EC) },
+        };
+
+        FontInfo info;
+
+        public void Initialize(FontKind kind)
+        {
+            info = Info[kind];
+        }
 
         public Font Convert(BinaryFormat source)
         {
@@ -37,21 +49,21 @@ namespace AmbitionConquest.Fonts
 
             DataReader reader = new DataReader(source.Stream);
 
-            // Get the number of chars
-            source.Stream.Position = 0x18;
-            ushort numChars = reader.ReadUInt16();
-
             Font font = new Font();
-            for (int i = 0; i < numChars; i++) {
+            font.GlyphWidth = info.GlyphWidth;
+            font.GlyphHeight = info.GlyphHeight;
+
+            for (int i = 0; i < info.NumGlyphs; i++) {
                 Glyph glyph = new Glyph();
                 glyph.Id = i;
 
                 // Get the char code
-                source.Stream.Position = 0x28 + (i * 2);
+                source.Stream.Position = info.MapOffset + (i * 2); // utf-16
                 glyph.CharCode = reader.ReadUInt16();
 
                 // Get the image
-                source.Stream.Position = 0x1CC + (i * GlyphSize);
+                // Glyph size + 1 byte with the actual width
+                source.Stream.Position = info.ImageOffset + (i * (info.GlyphSize + 1));
                 glyph.Width = reader.ReadByte();
                 glyph.Image = ReadGlyph(source.Stream);
                 font.Glyphs.Add(glyph);
@@ -62,12 +74,12 @@ namespace AmbitionConquest.Fonts
 
         Color[,] ReadGlyph(DataStream stream)
         {
-            var glyph = new Color[GlyphWidth, GlyphHeight];
+            var glyph = new Color[info.GlyphWidth, info.GlyphHeight];
 
             byte buffer = 0;
             byte bufferSize = 0;
-            for (int y = 0; y < GlyphHeight; y++) {
-                for (int x = 0; x < GlyphWidth; x++, bufferSize--) {
+            for (int y = 0; y < info.GlyphHeight; y++) {
+                for (int x = 0; x < info.GlyphWidth; x++, bufferSize--) {
                     if (bufferSize == 0) {
                         buffer = stream.ReadByte();
                         bufferSize = 8;
@@ -80,6 +92,32 @@ namespace AmbitionConquest.Fonts
             }
 
             return glyph;
+        }
+
+        struct FontInfo
+        {
+            public FontInfo(int width, int height, uint mapOffset, uint imageOffset)
+            {
+                GlyphWidth = width;
+                GlyphHeight = height;
+                MapOffset = mapOffset;
+                ImageOffset = imageOffset;
+
+                // 1 bpp
+                GlyphSize = (int)Math.Ceiling(width * height / 8.0);
+            }
+
+            public int NumGlyphs => 0xD1;  // It's hard-coded in the game code
+
+            public int GlyphWidth { get; }
+
+            public int GlyphHeight { get; }
+
+            public int GlyphSize { get; }
+
+            public uint MapOffset { get; }
+
+            public uint ImageOffset { get; }
         }
     }
 }

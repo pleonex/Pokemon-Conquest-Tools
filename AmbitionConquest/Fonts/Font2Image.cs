@@ -25,9 +25,6 @@ namespace AmbitionConquest.Fonts
 
     public class Font2Image : IConverter<Font, IImage>
     {
-        const int CharWidth = 28;
-        const int CharHeight = 19;
-
         const int CharsPerLine = 16;
         const int BorderThickness = 2;
         static readonly Pen BorderPen = new Pen(Color.Olive, BorderThickness);
@@ -44,8 +41,8 @@ namespace AmbitionConquest.Fonts
             int numRows = (int)Math.Ceiling((double)numChars / numColumns);
 
             // Char width + border from one side + border from the other side only at the end
-            int width = (numColumns * CharWidth) + ((numColumns + 1) * BorderThickness);
-            int height = (numRows * CharHeight) + ((numRows + 1) * BorderThickness);
+            int width = (numColumns * source.GlyphWidth) + ((numColumns + 1) * BorderThickness);
+            int height = (numRows * source.GlyphHeight) + ((numRows + 1) * BorderThickness);
 
             Bitmap image = new Bitmap(width, height);
             Graphics graphic = Graphics.FromImage(image);
@@ -58,8 +55,8 @@ namespace AmbitionConquest.Fonts
                         break;
 
                     // Gets coordinates
-                    int x = c * (CharWidth + BorderThickness);
-                    int y = r * (CharHeight + BorderThickness);
+                    int x = c * (source.GlyphWidth + BorderThickness);
+                    int y = r * (source.GlyphHeight + BorderThickness);
 
                     // Alignment due to rectangle drawing method.
                     int borderAlign = (int)Math.Floor(BorderThickness / 2.0);
@@ -68,8 +65,8 @@ namespace AmbitionConquest.Fonts
                         BorderPen,
                         x + borderAlign,
                         y + borderAlign,
-                        CharWidth + BorderThickness,
-                        CharHeight + BorderThickness);
+                        source.GlyphWidth + BorderThickness,
+                        source.GlyphHeight + BorderThickness);
 
                     graphic.DrawImage(
                         GlyphToImage(source.Glyphs[index]),

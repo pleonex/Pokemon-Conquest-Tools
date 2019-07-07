@@ -68,13 +68,26 @@ Task("Export-Font")
     .IsDependentOn("Open-Game")
     .Does<BuildData>(data =>
 {
-    var font = Navigator.SearchNode(data.Root, "/root/system/overlay9_11")
-        .TransformWith<Font2Binary>()
-        .GetFormatAs<Font>();
-    ((BinaryFormat)ConvertFormat.ConvertWith<Font2Yaml>(font))
-        .Stream.WriteTo($"{data.FontDirectory}/font.yml");
-    ((IImage)ConvertFormat.ConvertWith<Font2Image>(font))
-        .Image.Save($"{data.FontDirectory}/font.png");
+    var overlay10 = Navigator.SearchNode(data.Root, "/root/system/overlay9_10").Format;
+    var overlay11 = Navigator.SearchNode(data.Root, "/root/system/overlay9_11").Format;
+
+    var fontDebug = ConvertFormat.ConvertWith<Font2Binary, FontKind>(FontKind.Debug, overlay11);
+    ((BinaryFormat)ConvertFormat.ConvertWith<Font2Yaml>(fontDebug))
+        .Stream.WriteTo($"{data.FontDirectory}/debug.yml");
+    ((IImage)ConvertFormat.ConvertWith<Font2Image>(fontDebug))
+        .Image.Save($"{data.FontDirectory}/debug.png");
+
+    var fontSmall = ConvertFormat.ConvertWith<Font2Binary, FontKind>(FontKind.Small, overlay10);
+    ((BinaryFormat)ConvertFormat.ConvertWith<Font2Yaml>(fontSmall))
+        .Stream.WriteTo($"{data.FontDirectory}/small.yml");
+    ((IImage)ConvertFormat.ConvertWith<Font2Image>(fontSmall))
+        .Image.Save($"{data.FontDirectory}/small.png");
+
+    var fontRegular = ConvertFormat.ConvertWith<Font2Binary, FontKind>(FontKind.Normal, overlay10);
+    ((BinaryFormat)ConvertFormat.ConvertWith<Font2Yaml>(fontRegular))
+        .Stream.WriteTo($"{data.FontDirectory}/regular.yml");
+    ((IImage)ConvertFormat.ConvertWith<Font2Image>(fontRegular))
+        .Image.Save($"{data.FontDirectory}/regular.png");
 });
 
 Task("Export-TextLists")

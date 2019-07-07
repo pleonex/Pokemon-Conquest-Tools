@@ -1,9 +1,7 @@
-// Font.cs
-//
 // Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
 //
-// Copyright (c) 2018 Benito Palacios Sanchez
+// Copyright (c) 2019 Benito Palacios Sanchez
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,32 +14,13 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace AmbitionConquest.Fonts
 {
-    using System.Collections.Generic;
-    using Yarhl.FileFormat;
-
-    public class Font : IFormat
+    public enum FontKind
     {
-        public Font()
-        {
-            Glyphs = new List<Glyph>();
-        }
-
-        public int GlyphWidth {
-            get;
-            set;
-        }
-
-        public int GlyphHeight {
-            get;
-            set;
-        }
-
-        public IList<Glyph> Glyphs {
-            get;
-            private set;
-        }
+        Debug,
+        Small,
+        Normal,
     }
 }
