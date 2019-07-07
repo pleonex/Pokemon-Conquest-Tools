@@ -82,42 +82,42 @@ Task("Export-TextLists")
     .Does<BuildData>(data =>
 {
     data.GetNode("data/Building.dat")
-        .TransformWith<BlockText2Po, BlockTextFile>(BlockTextFile.Building)
+        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Building)
         .TransformWith<Po2Binary>()
         .Stream.WriteTo($"{data.TextDirectory}/building.pot");
 
     data.GetNode("data/EventSpeaker.dat")
-        .TransformWith<BlockText2Po, BlockTextFile>(BlockTextFile.EventSpeaker)
+        .TransformWith<Binary2TextList, TextListKind>(TextListKind.EventSpeaker)
         .TransformWith<Po2Binary>()
         .Stream.WriteTo($"{data.TextDirectory}/event_speaker.pot");
 
     data.GetNode("data/Gimmick.dat")
-        .TransformWith<BlockText2Po, BlockTextFile>(BlockTextFile.Gimmick)
+        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Gimmick)
         .TransformWith<Po2Binary>()
         .Stream.WriteTo($"{data.TextDirectory}/gimmick.pot");
 
     data.GetNode("data/Item.dat")
-        .TransformWith<BlockText2Po, BlockTextFile>(BlockTextFile.Item)
+        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Item)
         .TransformWith<Po2Binary>()
         .Stream.WriteTo($"{data.TextDirectory}/item.pot");
 
     data.GetNode("data/Kuni.dat")
-        .TransformWith<BlockText2Po, BlockTextFile>(BlockTextFile.Kuni)
+        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Kuni)
         .TransformWith<Po2Binary>()
         .Stream.WriteTo($"{data.TextDirectory}/kuni.pot");
 
     data.GetNode("data/Saihai.dat")
-        .TransformWith<BlockText2Po, BlockTextFile>(BlockTextFile.Saihai)
+        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Saihai)
         .TransformWith<Po2Binary>()
         .Stream.WriteTo($"{data.TextDirectory}/saihai.pot");
 
     data.GetNode("data/Tokusei.dat")
-        .TransformWith<BlockText2Po, BlockTextFile>(BlockTextFile.Tokusei)
+        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Tokusei)
         .TransformWith<Po2Binary>()
         .Stream.WriteTo($"{data.TextDirectory}/tokusei.pot");
 
     data.GetNode("data/Waza.dat")
-        .TransformWith<BlockText2Po, BlockTextFile>(BlockTextFile.Waza)
+        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Waza)
         .TransformWith<Po2Binary>()
         .Stream.WriteTo($"{data.TextDirectory}/waza.pot");
 });
@@ -142,7 +142,8 @@ Task("Export")
     .IsDependentOn("Export-TextLists")
     .IsDependentOn("Export-Messages");
 
-Task("Default");
+Task("Default")
+    .IsDependentOn("Export");
 
 Information($"AmbitionConquest v{typeof(Message).Assembly.GetName().Version}");
 Information("Editor for Pokémon Conquest ~~ by pleonex");

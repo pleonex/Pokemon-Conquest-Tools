@@ -20,7 +20,6 @@
 namespace AmbitionConquest.Texts
 {
     using System;
-    using System.Collections.Generic;
     using Yarhl.FileFormat;
     using Yarhl.FileSystem;
     using Yarhl.IO;

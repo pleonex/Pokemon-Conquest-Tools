@@ -1,6 +1,4 @@
-﻿// BlockText2Po.cs
-//
-// Author:
+﻿// Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
 //
 // Copyright (c) 2018 Benito Palacios Sanchez
@@ -26,25 +24,25 @@ namespace AmbitionConquest.Texts
     using Yarhl.Media.Text;
     using Yarhl.Media.Text.Encodings;
 
-    public class BlockText2Po : IInitializer<BlockTextFile>, IConverter<BinaryFormat, Po>
+    public class Binary2TextList : IInitializer<TextListKind>, IConverter<BinaryFormat, Po>
     {
-        static readonly IDictionary<BlockTextFile, Tuple<int, int>> FileInfo =
-            new Dictionary<BlockTextFile, Tuple<int, int>> {
-                { BlockTextFile.Building, new Tuple<int, int>(0x12, 0x12) },
-                { BlockTextFile.EventSpeaker, new Tuple<int, int>(0x10, 0x02) },
-                { BlockTextFile.Gimmick, new Tuple<int, int>(0x10, 0x18) },
-                { BlockTextFile.Item, new Tuple<int, int>(0x14, 0x10) },
-                { BlockTextFile.Kuni, new Tuple<int, int>(0x0A, 0x0E) },
-                { BlockTextFile.Saihai, new Tuple<int, int>(0x10, 0x0C) },
-                { BlockTextFile.Tokusei, new Tuple<int, int>(0x0E, 0x06) },
-                { BlockTextFile.Waza, new Tuple<int, int>(0x0F, 0x15) },
+        static readonly IDictionary<TextListKind, Tuple<int, int>> FileInfo =
+            new Dictionary<TextListKind, Tuple<int, int>> {
+                { TextListKind.Building, new Tuple<int, int>(0x12, 0x12) },
+                { TextListKind.EventSpeaker, new Tuple<int, int>(0x10, 0x02) },
+                { TextListKind.Gimmick, new Tuple<int, int>(0x10, 0x18) },
+                { TextListKind.Item, new Tuple<int, int>(0x14, 0x10) },
+                { TextListKind.Kuni, new Tuple<int, int>(0x0A, 0x0E) },
+                { TextListKind.Saihai, new Tuple<int, int>(0x10, 0x0C) },
+                { TextListKind.Tokusei, new Tuple<int, int>(0x0E, 0x06) },
+                { TextListKind.Waza, new Tuple<int, int>(0x0F, 0x15) },
         };
 
-        public BlockTextFile File { get; private set; }
+        public TextListKind Kind { get; private set; }
 
-        public void Initialize(BlockTextFile param)
+        public void Initialize(TextListKind param)
         {
-            File = param;
+            Kind = param;
         }
 
         public Po Convert(BinaryFormat source)
@@ -52,11 +50,11 @@ namespace AmbitionConquest.Texts
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            if (!FileInfo.ContainsKey(File))
+            if (!FileInfo.ContainsKey(Kind))
                 throw new FormatException("Unknown file type");
 
-            int textSize = FileInfo[File].Item1;
-            int dataSize = FileInfo[File].Item2;
+            int textSize = FileInfo[Kind].Item1;
+            int dataSize = FileInfo[Kind].Item2;
 
             Po po = new Po {
                 Header = new PoHeader("Pokemon Conquest", "benito356@gmail.com", "en-US"),
