@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AssemblyName>AmbitionConquest</AssemblyName>
     <Version>2.0</Version>
-    <Description>Tool to export Pokemon Conquest files.</Description>
+    <Description>Library with converters for Pokemon Conquest files.</Description>
     <Product>AmbitionConquest</Product>
 
     <Authors>pleonex</Authors>
@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/pleonex/PokemonConquest/</RepositoryUrl>
     <License>GPL-3.0-or-later</License>
 
-    <TargetFrameworks>net472;netcoreapp2.2</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <RootNamespace>AmbitionConquest</RootNamespace>
     <CodeAnalysisRuleSet>..\StyleCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>

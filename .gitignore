@@ -1,5 +1,9 @@
 GameData/
 
+# Cake
+tools/*
+!tools/packages.config
+
 # User-specific files
 *.suo
 *.user
