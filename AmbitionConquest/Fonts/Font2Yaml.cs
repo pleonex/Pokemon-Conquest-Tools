@@ -35,11 +35,11 @@ namespace AmbitionConquest.Fonts
 
             var serializer = new SerializerBuilder()
                 .WithNamingConvention(new UnderscoredNamingConvention())
+                .EmitDefaults()
                 .WithAttributeOverride<Glyph>(g => g.Image, new YamlIgnoreAttribute())
-                .WithAttributeOverride<Glyph>(g => g.Id, new YamlIgnoreAttribute())
-                .WithAttributeOverride<Glyph>(g => g.CharCode, new YamlMemberAttribute {
-                    Order = 0,
-                })
+                .WithAttributeOverride<Glyph>(g => g.Id, new YamlMemberAttribute { Order = 0 })
+                .WithAttributeOverride<Glyph>(g => g.CharCode, new YamlMemberAttribute { Order = 1 })
+                .WithAttributeOverride<Glyph>(g => g.Width, new YamlMemberAttribute { Order = 2 })
                 .Build();
             string yaml = serializer.Serialize(source);
 
