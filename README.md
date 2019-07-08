@@ -1,6 +1,9 @@
 # Pokemon Conquest Tools
 
-Tools to edit files from Pokemon Conquest
+Tools to edit files from Pokemon Conquest.
+
+**These tools have been tested against the european (EUR) version, but
+they should work after minor changes for other regions.**
 
 ## Export files
 

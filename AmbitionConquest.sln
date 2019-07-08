@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbitionConquest", "AmbitionConquest\AmbitionConquest.csproj", "{C5AD8E4C-CD71-4D60-B691-9544AAB33AF1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbitionConquest.IntegrationTests", "AmbitionConquest.IntegrationTests\AmbitionConquest.IntegrationTests.csproj", "{24C476E6-E34D-4430-ACA7-390D38DEB72D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{C5AD8E4C-CD71-4D60-B691-9544AAB33AF1}.Release|x64.Build.0 = Release|Any CPU
 		{C5AD8E4C-CD71-4D60-B691-9544AAB33AF1}.Release|x86.ActiveCfg = Release|Any CPU
 		{C5AD8E4C-CD71-4D60-B691-9544AAB33AF1}.Release|x86.Build.0 = Release|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Debug|x64.Build.0 = Debug|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Debug|x86.Build.0 = Debug|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Release|x64.ActiveCfg = Release|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Release|x64.Build.0 = Release|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Release|x86.ActiveCfg = Release|Any CPU
+		{24C476E6-E34D-4430-ACA7-390D38DEB72D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

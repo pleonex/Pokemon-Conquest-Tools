@@ -19,12 +19,17 @@ namespace AmbitionConquest.Texts
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
     using Yarhl.FileFormat;
     using Yarhl.IO;
     using Yarhl.Media.Text;
-    using Yarhl.Media.Text.Encodings;
 
-    public class Binary2TextList : IInitializer<TextListKind>, IConverter<BinaryFormat, Po>
+    public class Binary2TextList :
+        IInitializer<TextListKind>,
+        IConverter<BinaryFormat, Po>,
+        IConverter<Po, BinaryFormat>
     {
         static readonly IDictionary<TextListKind, Tuple<int, int>> FileInfo =
             new Dictionary<TextListKind, Tuple<int, int>> {
@@ -37,6 +42,13 @@ namespace AmbitionConquest.Texts
                 { TextListKind.Tokusei, new Tuple<int, int>(0x0E, 0x06) },
                 { TextListKind.Waza, new Tuple<int, int>(0x0F, 0x15) },
         };
+
+        static Binary2TextList()
+        {
+            // Make sure that the shift-jis encoding is initialized in
+            // .NET Core
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
 
         public TextListKind Kind { get; private set; }
 
@@ -61,16 +73,54 @@ namespace AmbitionConquest.Texts
             };
 
             DataReader reader = new DataReader(source.Stream) {
-                DefaultEncoding = new EscapeOutRangeEncoding("ascii"),
+                DefaultEncoding = Encoding.GetEncoding("shift_jis"),
             };
 
+            int count = 0;
             while (!source.Stream.EndOfStream) {
-                string segment = reader.ReadString(textSize).Replace("\0", string.Empty);
-                po.Add(new PoEntry(segment));
-                source.Stream.Position += dataSize;
+                string text = reader.ReadString(textSize).Replace("\0", string.Empty);
+                byte[] data = reader.ReadBytes(dataSize);
+
+                var entry = new PoEntry {
+                    Original = text,
+                    Context = $"{count}",
+                    Flags = $"max-length:{textSize}",
+                    Reference = BitConverter.ToString(data),
+                };
+
+                po.Add(entry);
+                count++;
             }
 
             return po;
+        }
+
+        public BinaryFormat Convert(Po source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (!FileInfo.ContainsKey(Kind))
+                throw new FormatException("Unknown file type");
+
+            int textSize = FileInfo[Kind].Item1;
+            int dataSize = FileInfo[Kind].Item2;
+
+            BinaryFormat binary = new BinaryFormat();
+            DataWriter writer = new DataWriter(binary.Stream) {
+                DefaultEncoding = Encoding.GetEncoding("shift_jis")
+            };
+
+            foreach (var entry in source.Entries) {
+                writer.Write(entry.Text, textSize);
+
+                byte[] data = entry.Reference.Split('-')
+                    .Select(s => byte.Parse(s, NumberStyles.HexNumber))
+                    .ToArray();
+                writer.Write(data);
+            }
+
+            return binary;
         }
     }
 }
