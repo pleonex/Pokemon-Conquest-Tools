@@ -72,5 +72,11 @@ namespace AmbitionConquest.IntegrationTests
                     TextListKind.Waza);
             }
         }
+
+        public static IEnumerable BlockMessage {
+            get {
+                yield return Path.Combine(RomDataDirectory, "MSG.DAT");
+            }
+        }
     }
 }

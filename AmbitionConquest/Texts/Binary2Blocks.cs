@@ -24,7 +24,9 @@ namespace AmbitionConquest.Texts
     using Yarhl.FileSystem;
     using Yarhl.IO;
 
-    public class Binary2Blocks : IConverter<BinaryFormat, NodeContainerFormat>
+    public class Binary2Blocks :
+        IConverter<BinaryFormat, NodeContainerFormat>,
+        IConverter<NodeContainerFormat, BinaryFormat>
     {
         public NodeContainerFormat Convert(BinaryFormat source)
         {
@@ -58,6 +60,37 @@ namespace AmbitionConquest.Texts
             }
 
             return container;
+        }
+
+        public BinaryFormat Convert(NodeContainerFormat source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            BinaryFormat binary = new BinaryFormat();
+            DataWriter writer = new DataWriter(binary.Stream);
+            var children = source.Root.Children;
+
+            // Write empty FAT so we can start writing the file content too
+            writer.WriteTimes(0x00, children.Count * 8);
+            writer.WritePadding(0x00, 0x800);
+
+            for (int i = 0; i < children.Count; i++) {
+                binary.Stream.PushToPosition(i * 8);
+                writer.Write((uint)binary.Stream.Length); // offset of new file
+                writer.Write((uint)children[i].Stream.Length);
+                binary.Stream.PopPosition();
+
+                byte[] data = new byte[children[i].Stream.Length];
+                children[i].Stream.Position = 0;
+                children[i].Stream.Read(data, 0, data.Length);
+                Encryption.Run(data);
+
+                writer.Write(data);
+                writer.WritePadding(0x00, 0x800);
+            }
+
+            return binary;
         }
     }
 }
