@@ -90,6 +90,11 @@ namespace AmbitionConquest.Texts
                     Reference = BitConverter.ToString(data),
                 };
 
+                if (text == "dummy") {
+                    entry.TranslatorComment = "Unused - Ignore";
+                    entry.Translated = "dummy";
+                }
+
                 po.Add(entry);
                 count++;
             }
