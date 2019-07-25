@@ -40,9 +40,9 @@ namespace AmbitionConquest.IntegrationTests.Texts
                 var originalBin = node.Stream;
 
                 var blocks = ConvertFormat
-                    .ConvertWith<Binary2Blocks>(node.Format);
+                    .With<Binary2Blocks>(node.Format);
                 var importedBin = (BinaryFormat)ConvertFormat
-                    .ConvertWith<Binary2Blocks>(blocks);
+                    .With<Binary2Blocks>(blocks);
 
                 bool comparaison = importedBin.Stream.Compare(originalBin);
                 Assert.That(comparaison, Is.True);

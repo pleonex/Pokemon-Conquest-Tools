@@ -36,15 +36,15 @@ namespace AmbitionConquest.IntegrationTests.Texts
         }
 
         [Test]
-        public void TestBuildingList()
+        public void TestConvertTwoWays()
         {
             using (Node node = NodeFactory.FromFile(filePath)) {
                 var originalBin = node.Stream;
 
                 var textList = ConvertFormat
-                    .ConvertWith<Binary2TextList, TextListKind>(kind, node.Format);
+                    .With<Binary2TextList, TextListKind>(kind, node.Format);
                 var importedBin = (BinaryFormat)ConvertFormat
-                    .ConvertWith<Binary2TextList, TextListKind>(kind, textList);
+                    .With<Binary2TextList, TextListKind>(kind, textList);
 
                 bool comparaison = importedBin.Stream.Compare(originalBin);
                 Assert.That(comparaison, Is.True, $"{kind}");
