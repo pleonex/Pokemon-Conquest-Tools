@@ -72,6 +72,7 @@ namespace AmbitionConquest.Texts
                 Header = new PoHeader("Pokemon Conquest", "benito356@gmail.com", "en-US"),
             };
 
+            Table table = Table.Instance;
             DataReader reader = new DataReader(source.Stream) {
                 DefaultEncoding = Encoding.GetEncoding("shift_jis"),
             };
@@ -79,6 +80,7 @@ namespace AmbitionConquest.Texts
             int count = 0;
             while (!source.Stream.EndOfStream) {
                 string text = reader.ReadString(textSize).Replace("\0", string.Empty);
+                text = table.Decode(text);
                 byte[] data = reader.ReadBytes(dataSize);
 
                 var entry = new PoEntry {
@@ -108,11 +110,13 @@ namespace AmbitionConquest.Texts
 
             BinaryFormat binary = new BinaryFormat();
             DataWriter writer = new DataWriter(binary.Stream) {
-                DefaultEncoding = Encoding.GetEncoding("shift_jis")
+                DefaultEncoding = Encoding.GetEncoding("shift_jis"),
             };
 
+            Table table = Table.Instance;
             foreach (var entry in source.Entries) {
-                writer.Write(entry.Text, textSize);
+                string text = table.Encode(entry.Text);
+                writer.Write(text, textSize);
 
                 byte[] data = entry.Reference.Split('-')
                     .Select(s => byte.Parse(s, NumberStyles.HexNumber))
