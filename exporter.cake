@@ -12,8 +12,8 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#addin nuget:?package=Yarhl&version=3.0.0-alpha04
-#addin nuget:?package=Yarhl.Media&version=3.0.0-alpha04
+#addin nuget:?package=Yarhl&version=3.0.0-alpha05
+#addin nuget:?package=Yarhl.Media&version=3.0.0-alpha05
 #addin nuget:?package=System.Drawing.Common&version=4.6.0-preview6.19303.8
 #addin nuget:?package=YamlDotNet&version=6.0.0
 #r "AmbitionConquest/bin/Debug/netstandard2.0/AmbitionConquest.dll"
