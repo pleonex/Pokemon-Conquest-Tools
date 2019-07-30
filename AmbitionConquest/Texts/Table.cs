@@ -50,12 +50,12 @@ namespace AmbitionConquest.Texts
 
         public string Decode(string text)
         {
-            return replacer.Transform(text, true);
+            return replacer.TransformForward(text);
         }
 
         public string Encode(string text)
         {
-            return replacer.Transform(text, false);
+            return replacer.TransformBackward(text);
         }
 
         void FillTable()
