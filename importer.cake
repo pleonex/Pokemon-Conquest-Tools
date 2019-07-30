@@ -27,46 +27,23 @@ string target = Argument("target", "Default");
 
 public class BuildData
 {
-    public string Game { get; set; }
-
     public string OutputDirectory { get; set; }
 
     public string InputDirectory { get; set; }
 
-    public string InternalDirectory { get { return $"{InputDirectory}/internal"; } }
-
-    public string ImageDirectory { get { return $"{InputDirectory}/images"; } }
-
-    public string FontDirectory { get { return $"{InputDirectory}/fonts"; } }
-
     public string TextDirectory { get { return $"{InputDirectory}/texts"; } }
 
     public string MessagesDirectory { get { return $"{InputDirectory}/messages"; } }
-
-    public Node Root { get; set; }
-
-    public Node GetNode(string path)
-    {
-        return Navigator.SearchNode(Root, $"/root/rom/{path}");
-    }
 }
 
 Setup<BuildData>(setupContext => {
     return new BuildData {
-        Game = Argument("game", System.IO.Path.Combine("GameData", "root")),
         InputDirectory = Argument("input", "GameData/translated"),
         OutputDirectory = Argument("output", "GameData/output"),
     };
 });
 
-Task("Open-Game")
-    .Does<BuildData>(data =>
-{
-    data.Root = NodeFactory.FromDirectory(data.Game, "*", "root", true);
-});
-
 Task("Import-TextLists")
-    .IsDependentOn("Open-Game")
     .Does<BuildData>(data =>
 {
     NodeFactory.FromFile($"{data.TextDirectory}/building.po")
