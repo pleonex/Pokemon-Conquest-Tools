@@ -73,6 +73,12 @@ namespace AmbitionConquest.IntegrationTests
             }
         }
 
+        public static IEnumerable PokemonList {
+            get {
+                yield return Path.Combine(RomDataDirectory, "Pokemon.dat");
+            }
+        }
+
         public static IEnumerable BlockMessage {
             get {
                 yield return Path.Combine(RomDataDirectory, "MSG.DAT");

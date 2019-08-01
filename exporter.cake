@@ -96,6 +96,12 @@ Task("Export-TextLists")
     .IsDependentOn("Open-Game")
     .Does<BuildData>(data =>
 {
+    data.GetNode("data/Pokemon.dat")
+        .TransformWith<Binary2PokemonList>()
+        .TransformWith<PokemonList2Po>()
+        .TransformWith<Po2Binary>()
+        .Stream.WriteTo($"{data.TextDirectory}/pokemon.{poExtension}");
+
     data.GetNode("data/Building.dat")
         .TransformWith<Binary2TextList, TextListKind>(TextListKind.Building)
         .TransformWith<Po2Binary>()

@@ -33,14 +33,14 @@ namespace AmbitionConquest.Texts
     {
         static readonly IDictionary<TextListKind, Tuple<int, int>> FileInfo =
             new Dictionary<TextListKind, Tuple<int, int>> {
-                { TextListKind.Building, new Tuple<int, int>(0x12, 0x12) },
-                { TextListKind.EventSpeaker, new Tuple<int, int>(0x10, 0x02) },
-                { TextListKind.Gimmick, new Tuple<int, int>(0x10, 0x18) },
-                { TextListKind.Item, new Tuple<int, int>(0x14, 0x10) },
-                { TextListKind.Kuni, new Tuple<int, int>(0x0A, 0x0E) },
-                { TextListKind.Saihai, new Tuple<int, int>(0x10, 0x0C) },
-                { TextListKind.Tokusei, new Tuple<int, int>(0x0E, 0x06) },
-                { TextListKind.Waza, new Tuple<int, int>(0x0F, 0x15) },
+                { TextListKind.Building,        Tuple.Create(0x12, 0x12) },
+                { TextListKind.EventSpeaker,    Tuple.Create(0x10, 0x02) },
+                { TextListKind.Gimmick,         Tuple.Create(0x10, 0x18) },
+                { TextListKind.Item,            Tuple.Create(0x14, 0x10) },
+                { TextListKind.Kuni,            Tuple.Create(0x0A, 0x0E) },
+                { TextListKind.Saihai,          Tuple.Create(0x10, 0x0C) },
+                { TextListKind.Tokusei,         Tuple.Create(0x0E, 0x06) },
+                { TextListKind.Waza,            Tuple.Create(0x0F, 0x15) },
         };
 
         static Binary2TextList()
