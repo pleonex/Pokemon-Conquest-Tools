@@ -27,6 +27,8 @@ string target = Argument("target", "Default");
 
 public class BuildData
 {
+    public string GameDirectory { get; set; }
+
     public string OutputDirectory { get; set; }
 
     public string InputDirectory { get; set; }
@@ -34,18 +36,44 @@ public class BuildData
     public string TextDirectory { get { return $"{InputDirectory}/texts"; } }
 
     public string MessagesDirectory { get { return $"{InputDirectory}/messages"; } }
+
+    public Node Root { get; set; }
+
+    public Node GetNode(string path)
+    {
+        return Navigator.SearchNode(Root, $"/root/rom/{path}");
+    }
 }
 
 Setup<BuildData>(setupContext => {
     return new BuildData {
+        GameDirectory = Argument("game", "GameData/root"),
         InputDirectory = Argument("input", "GameData/translated"),
         OutputDirectory = Argument("output", "GameData/output"),
     };
 });
 
-Task("Import-TextLists")
+Task("Open-Game")
     .Does<BuildData>(data =>
 {
+    data.Root = NodeFactory.FromDirectory(data.GameDirectory, "*", "root", true);
+});
+
+Task("Import-TextLists")
+    .IsDependentOn("Open-Game")
+    .Does<BuildData>(data =>
+{
+    // We need the original Pokemon list because it contains metadata
+    // that we didn't save into the po files.
+    var originalPokemonList = (PokemonList)data.GetNode("data/Pokemon.dat")
+        .TransformWith<Binary2PokemonList>()
+        .Format;
+    NodeFactory.FromFile($"{data.TextDirectory}/pokemon.po")
+        .TransformWith<Po2Binary>()
+        .TransformWith<PokemonList2Po, PokemonList>(originalPokemonList)
+        .TransformWith<Binary2PokemonList>()
+        .Stream.WriteTo($"{data.OutputDirectory}/data/Pokemon.dat");
+
     NodeFactory.FromFile($"{data.TextDirectory}/building.po")
         .TransformWith<Po2Binary>()
         .TransformWith<Binary2TextList, TextListKind>(TextListKind.Building)
