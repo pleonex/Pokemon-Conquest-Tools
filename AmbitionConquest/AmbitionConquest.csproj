@@ -5,7 +5,7 @@
     <AssemblyName>AmbitionConquest</AssemblyName>
     <Version>2.0</Version>
     <Description>Library with converters for Pokemon Conquest files.</Description>
-    <Product>AmbitionConquest</Product>
+    <Product>Pokemon Conquest Tools</Product>
 
     <Authors>pleonex</Authors>
     <Copyright>Copyright (c) 2018 pleonex</Copyright>

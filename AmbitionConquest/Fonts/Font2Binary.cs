@@ -53,7 +53,7 @@ namespace AmbitionConquest.Fonts
             font.GlyphWidth = info.GlyphWidth;
             font.GlyphHeight = info.GlyphHeight;
 
-            for (int i = 0; i < info.NumGlyphs; i++) {
+            for (int i = 0; i < FontInfo.NumGlyphs; i++) {
                 Glyph glyph = new Glyph();
                 glyph.Id = i;
 
@@ -107,7 +107,7 @@ namespace AmbitionConquest.Fonts
                 GlyphSize = (int)Math.Ceiling(width * height / 8.0);
             }
 
-            public int NumGlyphs => 0xD1;  // It's hard-coded in the game code
+            public static int NumGlyphs => 0xD1;  // It's hard-coded in the game code
 
             public int GlyphWidth { get; }
 

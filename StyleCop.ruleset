@@ -19,5 +19,11 @@
 
     <!-- Allow initializer to have brace in the same line. -->
     <Rule Id="SA1137" Action="None" />
+
+    <!-- Model implementations. -->
+    <Rule Id="CA1819" Action="None" />
+
+    <!-- Working with images make sense as jagged arrays. -->
+    <Rule Id="CA1814" Action="None" />
   </Rules>
 </RuleSet>
