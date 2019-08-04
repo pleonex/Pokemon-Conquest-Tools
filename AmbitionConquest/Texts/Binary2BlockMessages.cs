@@ -57,9 +57,6 @@ namespace AmbitionConquest.Texts
                     msg.ElementId = elementId++;
                     dialogs.Add(msg);
                 }
-
-                if (source.Stream.Position != endOffset)
-                    throw new FormatException("Overflow reading");
             }
 
             return dialogs;

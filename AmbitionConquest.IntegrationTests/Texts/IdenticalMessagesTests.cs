@@ -22,6 +22,7 @@ namespace AmbitionConquest.IntegrationTests.Texts
     using Yarhl.FileFormat;
     using Yarhl.FileSystem;
     using Yarhl.IO;
+    using Yarhl.Media.Text;
 
     [TestFixtureSource(typeof(TestData), nameof(TestData.BlockMessage))]
     public class IdenticalMessagesTests
@@ -46,6 +47,36 @@ namespace AmbitionConquest.IntegrationTests.Texts
 
                 bool comparaison = importedBin.Stream.Compare(originalBin);
                 Assert.That(comparaison, Is.True);
+            }
+        }
+
+        [Test]
+        public void TestConvertPoTwoWays()
+        {
+            using (Node node = NodeFactory.FromFile(filePath)) {
+                node.TransformWith<Binary2Blocks>();
+
+                foreach (var child in node.Children) {
+                    child.TransformTo<BlockMessages>();
+                    var expected = child.GetFormatAs<BlockMessages>();
+
+                    child.TransformTo<Po>()
+                        .TransformTo<BlockMessages>();
+                    var actual = child.GetFormatAs<BlockMessages>();
+
+                    Assert.That(actual.Messages.Count, Is.EqualTo(expected.Messages.Count));
+                    for (int i = 0; i < actual.Messages.Count; i++) {
+                        var actualMsg = actual.Messages[i];
+                        var expectedMsg = expected.Messages[i];
+
+                        Assert.That(actualMsg.IsEmpty, Is.EqualTo(expectedMsg.IsEmpty));
+                        Assert.That(actualMsg.GroupId, Is.EqualTo(expectedMsg.GroupId));
+                        Assert.That(actualMsg.ElementId, Is.EqualTo(expectedMsg.ElementId));
+                        Assert.That(actualMsg.Text, Is.EqualTo(expectedMsg.Text));
+                        Assert.That(actualMsg.BoxConfig, Is.EqualTo(expectedMsg.BoxConfig));
+                        Assert.That(actualMsg.Context, Is.EqualTo(expectedMsg.Context));
+                    }
+                }
             }
         }
     }
