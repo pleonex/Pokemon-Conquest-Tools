@@ -37,6 +37,7 @@ namespace AmbitionConquest.Texts
                 Header = new PoHeader("Pokemon Conquest", "benito356@gmail.com", "en-US"),
             };
 
+            Table table = Table.Instance;
             foreach (var message in source.Messages) {
                 if (message.IsEmpty) {
                     continue;
@@ -47,7 +48,7 @@ namespace AmbitionConquest.Texts
                     entry.Original = "<empty>";
                     entry.Translated = "<empty>";
                 } else {
-                    entry.Original = message.Text;
+                    entry.Original = table.Decode(message.Text);
                 }
 
                 entry.Context = $"group:{message.GroupId},id:{message.ElementId}";
@@ -65,10 +66,12 @@ namespace AmbitionConquest.Texts
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
+            Table table = Table.Instance;
             BlockMessages block = new BlockMessages();
             foreach (var entry in source.Entries) {
                 Message msg = new Message();
-                msg.Text = (entry.Text == "<empty>") ? string.Empty : entry.Text;
+                string text = (entry.Text == "<empty>") ? string.Empty : entry.Text;
+                msg.Text = table.Encode(text);
 
                 string[] context = entry.Context.Split(',');
                 string groupId = context[0].Substring("group:".Length);
@@ -94,7 +97,7 @@ namespace AmbitionConquest.Texts
                 // add a blank message. It has been tested against the US
                 // version only. If it doesn't work, we may need to export
                 // these blank messages as "empty" too.
-                AddEmptyBeforeGroupEnd(block, msg.GroupId, msg.ElementId);
+                AddEmptyBeforeGroupEnd(block, msg.GroupId);
                 AddMissingEmptyGroups(block, msg.GroupId);
                 AddMissingEmptyElements(block, msg.GroupId, msg.ElementId);
 
@@ -178,8 +181,7 @@ namespace AmbitionConquest.Texts
         /// </summary>
         /// <param name="block">List of messages.</param>
         /// <param name="currentGroup">The current group ID.</param>
-        /// <param name="currentElement">The current element ID.</param>
-        static void AddEmptyBeforeGroupEnd(BlockMessages block, int currentGroup, int currentElement)
+        static void AddEmptyBeforeGroupEnd(BlockMessages block, int currentGroup)
         {
             // If we don't have any group, just skip.
             if (block.Messages.Count == 0) {
