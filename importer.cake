@@ -47,7 +47,7 @@ public class BuildData
 
 Setup<BuildData>(setupContext => {
     return new BuildData {
-        GameDirectory = Argument("game", "GameData/root"),
+        GameDirectory = Argument("game", System.IO.Path.Combine("GameData", "root")),
         InputDirectory = Argument("input", "GameData/translated"),
         OutputDirectory = Argument("output", "GameData/output"),
     };
