@@ -20,12 +20,15 @@
 namespace AmbitionConquest.Texts
 {
     using System;
+    using System.Linq;
     using Yarhl.FileFormat;
     using Yarhl.IO;
 
-    public class Binary2BlockMessages : IConverter<BinaryFormat, BlockMessages>
+    public class Binary2BlockMessages :
+        IConverter<IBinary, BlockMessages>,
+        IConverter<BlockMessages, BinaryFormat>
     {
-        public BlockMessages Convert(BinaryFormat source)
+        public BlockMessages Convert(IBinary source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -60,6 +63,37 @@ namespace AmbitionConquest.Texts
             }
 
             return dialogs;
+        }
+
+        public BinaryFormat Convert(BlockMessages source)
+        {
+            if (source == null)
+                throw new ArgumentNullException();
+
+            var binary = new BinaryFormat();
+            var writer = new DataWriter(binary.Stream);
+            var pnaWriter = new PnaTextWriter(binary.Stream);
+
+            // Group the messages by groupId so we can generate the table
+            var msgByGroup = source.Messages.GroupBy(m => m.GroupId).ToArray();
+
+            // Write number and empty offset table
+            writer.Write(msgByGroup.Length);
+            writer.WriteTimes(0x00, 4 * msgByGroup.Length);
+
+            // Write every message with its offset
+            for (int i = 0; i < msgByGroup.Length; i++) {
+                binary.Stream.RunInPosition(
+                    () => writer.Write((uint)binary.Stream.Position),
+                    4 + (i * 4));
+
+                // Write all the elements of the message
+                foreach (var msg in msgByGroup[i]) {
+                    pnaWriter.WriteMessage(msg);
+                }
+            }
+
+            return binary;
         }
     }
 }

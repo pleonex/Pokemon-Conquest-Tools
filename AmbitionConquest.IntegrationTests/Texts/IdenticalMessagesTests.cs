@@ -79,5 +79,23 @@ namespace AmbitionConquest.IntegrationTests.Texts
                 }
             }
         }
+
+        [Test]
+        public void TestConvertBlockMessageTwoWays()
+        {
+            using (Node node = NodeFactory.FromFile(filePath)) {
+                node.TransformWith<Binary2Blocks>();
+
+                foreach (var child in node.Children) {
+                    var expected = child.Stream;
+
+                    var messages = ConvertFormat.To<BlockMessages>(child.Format);
+                    var actualBinary = (BinaryFormat)ConvertFormat
+                        .To<BinaryFormat>(messages);
+
+                    Assert.That(actualBinary.Stream.Compare(expected), Is.True);
+                }
+            }
+        }
     }
 }
