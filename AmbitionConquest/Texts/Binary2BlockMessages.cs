@@ -82,14 +82,20 @@ namespace AmbitionConquest.Texts
             writer.WriteTimes(0x00, 4 * msgByGroup.Length);
 
             // Write every message with its offset
+            bool multiElements = false;
             for (int i = 0; i < msgByGroup.Length; i++) {
                 binary.Stream.RunInPosition(
-                    () => writer.Write((uint)binary.Stream.Position),
+                    () => writer.Write((uint)binary.Stream.Length),
                     4 + (i * 4));
 
                 // Write all the elements of the message
                 foreach (var msg in msgByGroup[i]) {
-                    pnaWriter.WriteMessage(msg);
+                    if (msg.Context.Contains("text-if"))
+                    {
+                        multiElements = true;
+                    }
+
+                    pnaWriter.WriteMessage(msg, multiElements);
                 }
             }
 

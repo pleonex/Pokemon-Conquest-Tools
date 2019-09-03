@@ -1,4 +1,4 @@
-// PnaTextReader.cs
+﻿// PnaTextReader.cs
 //
 // Author:
 //       Benito Palacios Sanchez <benito356@gmail.com>
@@ -223,7 +223,7 @@ namespace AmbitionConquest.Texts
             byte code = stream.ReadByte();
             switch (code) {
                 case 0x40:
-                    int charIdx = ReadParameter();
+                    string charIdx = ReadParameter();
                     builder.Append($"{{char:{charIdx}}}");
                     break;
 
@@ -256,7 +256,7 @@ namespace AmbitionConquest.Texts
                 case 0x72:
                     SetTextBuilder();
                     furiganaMode = !furiganaMode;
-                    builder.Append(furiganaMode ? "[" : "]");
+                    builder.Append(furiganaMode ? "『" : "』");
                     break;
 
                 case 0x73:
@@ -304,9 +304,9 @@ namespace AmbitionConquest.Texts
                 case 6:
                     if (index < 0x20) {
                         stream.Position--;
-                        builder.Append("{attack}");
+                        builder.Append($"{{attack:{modulo}}}");
                     } else if (index == 100) {
-                        builder.Append("{enemy}");
+                        builder.Append($"{{enemy:{modulo}}}");
                     } else {
                         throw new FormatException("Unknown variable group 6");
                     }
@@ -326,7 +326,7 @@ namespace AmbitionConquest.Texts
                     else if (index == 100)
                         builder.Append("{name_npc}");
                     else if (index == 101)
-                        builder.Append("{name5}");
+                        builder.Append($"{{name5:{modulo}}}");
                     else
                         throw new FormatException("Unknown variable group 8");
                     break;
@@ -340,7 +340,7 @@ namespace AmbitionConquest.Texts
 
                 case 10:
                     if (index == 100)
-                        builder.Append("{item}");
+                        builder.Append($"{{item:{modulo}}}");
                     else
                         throw new FormatException("Unknown variable group 10");
                     break;
@@ -378,13 +378,13 @@ namespace AmbitionConquest.Texts
             }
         }
 
-        int ParseExpression()
+        string ParseExpression()
         {
             // It should actually call ParseVariable, but we only support
             // constants (code 0x25)
             if (stream.ReadByte() != 0x25)
                 throw new FormatException("Unsupported expression");
-            int result = ReadParameter();
+            string result = ReadParameter();
 
             // We can do maths if the next code is 0x03 (not supported yet)
             // There would be a next byte (0x25 - 0x2F) with the math op
@@ -397,7 +397,7 @@ namespace AmbitionConquest.Texts
             return result;
         }
 
-        int ReadParameter()
+        string ReadParameter()
         {
             StringBuilder text = new StringBuilder();
             for (int i = 0; i < 10; i++) {
@@ -407,10 +407,10 @@ namespace AmbitionConquest.Texts
                     break;
                 }
 
-                text.Append(ch);
+                text.Append((char)ch);
             }
 
-            return int.Parse(text.ToString());
+            return text.ToString();
         }
     }
 }

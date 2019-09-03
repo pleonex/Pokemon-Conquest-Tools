@@ -93,7 +93,7 @@ namespace AmbitionConquest.IntegrationTests.Texts
                     var actualBinary = (BinaryFormat)ConvertFormat
                         .To<BinaryFormat>(messages);
 
-                    Assert.That(actualBinary.Stream.Compare(expected), Is.True);
+                    Assert.That(actualBinary.Stream.Compare(expected), Is.True, child.Name);
                 }
             }
         }
