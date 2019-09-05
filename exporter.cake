@@ -158,13 +158,10 @@ Task("Export-Messages")
     }
 });
 
-Task("Export")
+Task("Default")
     .IsDependentOn("Export-Font")
     .IsDependentOn("Export-TextLists")
     .IsDependentOn("Export-Messages");
-
-Task("Default")
-    .IsDependentOn("Export");
 
 Information($"AmbitionConquest v{typeof(Message).Assembly.GetName().Version}");
 Information("Editor for Pokémon Conquest ~~ by pleonex");

@@ -35,7 +35,7 @@ public class BuildData
 
     public string TextDirectory { get { return $"{InputDirectory}/texts"; } }
 
-    public string MessagesDirectory { get { return $"{InputDirectory}/messages"; } }
+    public string MessagesDirectory { get { return $"{TextDirectory}/messages"; } }
 
     public Node Root { get; set; }
 
@@ -115,11 +115,23 @@ Task("Import-TextLists")
         .Stream.WriteTo($"{data.OutputDirectory}/data/Waza.dat");
 });
 
-Task("Import")
-    .IsDependentOn("Import-TextLists");
+Task("Import-Messages")
+    .IsDependentOn("Open-Game")
+    .Does<BuildData>(data =>
+{
+    var msgNode = NodeFactory.FromDirectory($"{data.MessagesDirectory.Replace("/", "\\")}", "*.po");
+    foreach (var child in msgNode.Children) {
+        child.TransformWith<Po2Binary>()
+            .TransformWith<BlockMessages2Po>()
+            .TransformWith<Binary2BlockMessages>();
+    }
 
+    msgNode.TransformWith<Binary2Blocks>()
+        .Stream.WriteTo($"{data.OutputDirectory}/data/MSG.dat");
+});
 Task("Default")
-    .IsDependentOn("Import");
+    .IsDependentOn("Import-TextLists")
+    .IsDependentOn("Import-Messages");
 
 Information($"AmbitionConquest v{typeof(Message).Assembly.GetName().Version}");
 Information("Editor for Pokémon Conquest ~~ by pleonex");

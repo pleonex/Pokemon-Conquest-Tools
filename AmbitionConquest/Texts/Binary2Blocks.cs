@@ -52,7 +52,7 @@ namespace AmbitionConquest.Texts
                 Encryption.Run(data);
 
                 // Create the child
-                Node child = NodeFactory.FromMemory($"block{count}.bin");
+                Node child = NodeFactory.FromMemory($"block{count:d2}.bin");
                 child.Stream.Write(data, 0, data.Length);
                 container.Root.Add(child);
 
