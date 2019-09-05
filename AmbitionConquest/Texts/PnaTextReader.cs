@@ -326,7 +326,7 @@ namespace AmbitionConquest.Texts
                     else if (index == 100)
                         builder.Append("{name_npc}");
                     else if (index == 101)
-                        builder.Append($"{{name5:{modulo}}}");
+                        builder.Append($"{{lord_name_var:{modulo}}}");
                     else
                         throw new FormatException("Unknown variable group 8");
                     break;
@@ -366,7 +366,7 @@ namespace AmbitionConquest.Texts
                     else if (modulo == 2)
                         builder.Append($"{{commander:{ParseExpression()}}}");
                     else if (modulo == 3)
-                        builder.Append("{name_blue}");
+                        builder.Append("{name1}");
                     else if (modulo == 4)
                         builder.Append("{lord_name}");
                     else

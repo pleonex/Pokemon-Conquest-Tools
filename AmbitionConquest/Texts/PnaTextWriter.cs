@@ -258,8 +258,8 @@ namespace AmbitionConquest.Texts
                 Write(0x02, 80, 0x64);
             } else if (command == "name_npc") {
                 Write(0x02, 81, 0x64);
-            } else if (command.StartsWith("name5:")) {
-                byte num = ReadVariableArg(command, "name5:");
+            } else if (command.StartsWith("lord_name_var:")) {
+                byte num = ReadVariableArg(command, "lord_name_var:");
                 Write(0x02, (byte)(80 + num), 0x65);
             } else if (command == "name3") {
                 Write(0x02, 90, 0x64);
@@ -273,7 +273,7 @@ namespace AmbitionConquest.Texts
                 Write(0x02, 120, 0x64);
             } else if (command == "lord_name") {
                 Write(0x02, 204);
-            } else if (command == "name_blue") {
+            } else if (command == "name1") {
                 Write(0x02, 203);
             } else if (command.StartsWith("commander:")) {
                 Write(0x02, 202, 0x25);
