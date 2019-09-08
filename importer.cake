@@ -24,7 +24,7 @@ using Yarhl.IO;
 using Yarhl.Media.Text;
 
 string target = Argument("target", "Default");
-bool importPokemon = Argument("no-pokemon", false);
+bool importPokemon = Argument("import-pokemon", true);
 
 public class BuildData
 {
