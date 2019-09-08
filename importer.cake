@@ -124,7 +124,8 @@ Task("Import-Messages")
     .IsDependentOn("Open-Game")
     .Does<BuildData>(data =>
 {
-    var msgNode = NodeFactory.FromDirectory($"{data.MessagesDirectory.Replace("/", "\\")}", "*.po");
+    string path = System.IO.Path.GetFullPath(data.MessagesDirectory);
+    var msgNode = NodeFactory.FromDirectory(path, "*.po");
     foreach (var child in msgNode.Children) {
         child.TransformWith<Po2Binary>()
             .TransformWith<BlockMessages2Po>()
