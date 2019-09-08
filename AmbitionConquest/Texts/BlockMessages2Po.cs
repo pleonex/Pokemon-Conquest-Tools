@@ -53,7 +53,7 @@ namespace AmbitionConquest.Texts
 
                 entry.Context = $"group:{message.GroupId},id:{message.ElementId}";
                 entry.ExtractedComments = $"context:{message.Context},box:{message.BoxConfig}";
-                entry.Flags = "max-length:9999,c-format,brace-format";
+                entry.Flags = "max-length:9999,c-format,brace-format,pokcon-format";
 
                 po.Add(entry);
             }

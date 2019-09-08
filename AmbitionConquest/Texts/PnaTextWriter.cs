@@ -245,14 +245,14 @@ namespace AmbitionConquest.Texts
             // Variables
             if (command == "turns") {
                 Write(0x02, 50);
-            } else if (command.StartsWith("attack:")) {
-                byte num = ReadVariableArg(command, "attack:");
+            } else if (command.StartsWith("variable1:")) {
+                byte num = ReadVariableArg(command, "variable1:");
                 Write(0x02, (byte)(60 + num));
             } else if (command.StartsWith("enemy:")) {
                 byte num = ReadVariableArg(command, "enemy:");
                 Write(0x02, (byte)(60 + num), 0x64);
-            } else if (command.StartsWith("pokemon_trainer:")) {
-                byte num = ReadVariableArg(command, "pokemon_trainer:");
+            } else if (command.StartsWith("pokemon:")) {
+                byte num = ReadVariableArg(command, "pokemon:");
                 Write(0x02, (byte)(70 + num), 0x64);
             } else if (command == "name2") {
                 Write(0x02, 80, 0x64);

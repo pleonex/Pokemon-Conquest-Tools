@@ -304,7 +304,7 @@ namespace AmbitionConquest.Texts
                 case 6:
                     if (index < 0x20) {
                         stream.Position--;
-                        builder.Append($"{{attack:{modulo}}}");
+                        builder.Append($"{{variable1:{modulo}}}");
                     } else if (index == 100) {
                         builder.Append($"{{enemy:{modulo}}}");
                     } else {
@@ -315,7 +315,7 @@ namespace AmbitionConquest.Texts
 
                 case 7:
                     if (index == 100)
-                        builder.Append($"{{pokemon_trainer:{modulo}}}");
+                        builder.Append($"{{pokemon:{modulo}}}");
                     else
                         throw new FormatException("Unknown variable group 7");
                     break;
