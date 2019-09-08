@@ -24,6 +24,7 @@ using Yarhl.IO;
 using Yarhl.Media.Text;
 
 string target = Argument("target", "Default");
+bool importPokemon = Argument("no-pokemon", false);
 
 public class BuildData
 {
@@ -56,23 +57,27 @@ Setup<BuildData>(setupContext => {
 Task("Open-Game")
     .Does<BuildData>(data =>
 {
-    data.Root = NodeFactory.FromDirectory(data.GameDirectory, "*", "root", true);
+    if (importPokemon) {
+        data.Root = NodeFactory.FromDirectory(data.GameDirectory, "*", "root", true);
+    }
 });
 
 Task("Import-TextLists")
     .IsDependentOn("Open-Game")
     .Does<BuildData>(data =>
 {
-    // We need the original Pokemon list because it contains metadata
-    // that we didn't save into the po files.
-    var originalPokemonList = (PokemonList)data.GetNode("data/Pokemon.dat")
-        .TransformWith<Binary2PokemonList>()
-        .Format;
-    NodeFactory.FromFile($"{data.TextDirectory}/pokemon.po")
-        .TransformWith<Po2Binary>()
-        .TransformWith<PokemonList2Po, PokemonList>(originalPokemonList)
-        .TransformWith<Binary2PokemonList>()
-        .Stream.WriteTo($"{data.OutputDirectory}/data/Pokemon.dat");
+    if (importPokemon) {
+        // We need the original Pokemon list because it contains metadata
+        // that we didn't save into the po files.
+        var originalPokemonList = (PokemonList)data.GetNode("data/Pokemon.dat")
+            .TransformWith<Binary2PokemonList>()
+            .Format;
+        NodeFactory.FromFile($"{data.TextDirectory}/pokemon.po")
+            .TransformWith<Po2Binary>()
+            .TransformWith<PokemonList2Po, PokemonList>(originalPokemonList)
+            .TransformWith<Binary2PokemonList>()
+            .Stream.WriteTo($"{data.OutputDirectory}/data/Pokemon.dat");
+    }
 
     NodeFactory.FromFile($"{data.TextDirectory}/building.po")
         .TransformWith<Po2Binary>()
