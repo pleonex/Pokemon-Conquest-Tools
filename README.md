@@ -5,9 +5,7 @@ Tools to translate the game Pokemon Conquest.
 **These tools have been tested against the european (EUR) version, but they
 should work after minor changes for other regions.**
 
-## Export files
-
-### Prerequisites
+## Prerequisites
 
 Before running the script to export files, follow these steps to setup the
 folders:
@@ -29,34 +27,45 @@ folders:
 9. Decompress the ARM9 and the overlay files with the tool `blz.exe`. For
    instance: `blz.exe -d GameData/root/system/*`
 
-### Run script
+## Export
 
-To export the game files to editable formats, run the following scripts. The
-extracted files will be in `GameData/extracted`. The optional arguments are:
+To export the game files to editable formats, run the script `exporter.cake`.
+The optional arguments are:
 
-- `--game`: path to the _root_ folder with the game files.
-- `--output`: output directory to extract files.
+- `--game`: path to the _root_ folder with the game files. Default:
+  `./GameData/root`
+- `--output`: output directory to extract files. Default: `./GameData/extracted`
 
-#### Windows
+## Import
+
+To import the translated files and generate the new binary files, run the script
+`importer.cake`. The optional arguments are:
+
+- `--game`: path to the _root_ folder with the game files. Default:
+  `./GameData/root`
+- `--input`: folder with the translated files. It must follow the same structure
+  as the extracted folder. Default: `./GameData/translated`
+- `--output`: output directory to write the binary files. Default:
+  `./GameData/output`
+
+## Running the scripts
+
+### Windows
 
 From PowerShell console:
 
 ```powershell
-.\build.ps1 -script exporter.cake
+.\build.ps1 -script my_script.cake
 ```
 
 From cmd.exe console:
 
 ```batch
-powershell -ExecutionPolicy ByPass -File build.ps1 -script exporter.cake
+powershell -ExecutionPolicy ByPass -File build.ps1 -script my_script.cake
 ```
 
-#### Linux
+### Linux
 
 ```bash
-./build.sh --script exporter.cake
+./build.sh --script my_script.cake
 ```
-
-## Import files
-
-TODO
