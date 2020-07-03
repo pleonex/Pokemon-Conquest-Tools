@@ -12,10 +12,10 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#addin nuget:?package=Yarhl&version=3.0.0-alpha06
-#addin nuget:?package=Yarhl.Media&version=3.0.0-alpha06
-#addin nuget:?package=System.Drawing.Common&version=4.6.0-preview6.19303.8
-#addin nuget:?package=YamlDotNet&version=6.0.0
+#addin nuget:?package=Yarhl&version=3.0.0-alpha06&loaddependencies=true&prerelease
+#addin nuget:?package=Yarhl.Media&version=3.0.0-alpha06&loaddependencies=true&prerelease
+#addin nuget:?package=System.Drawing.Common&version=4.6.0-preview6.19303.8&loaddependencies=true&prerelease
+#addin nuget:?package=YamlDotNet&version=6.0.0&loaddependencies=true
 #r "AmbitionConquest/bin/Debug/netstandard2.0/AmbitionConquest.dll"
 
 using AmbitionConquest.Fonts;
