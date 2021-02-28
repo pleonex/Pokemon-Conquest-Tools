@@ -33,6 +33,8 @@ public class BuildData
 {
     public string Game { get; set; }
 
+    public bool IsJap { get; set; }
+
     public string OutputDirectory { get; set; }
 
     public string InternalDirectory { get { return $"{OutputDirectory}/internal"; } }
@@ -56,6 +58,7 @@ public class BuildData
 Setup<BuildData>(setupContext => {
     return new BuildData {
         Game = Argument("game", System.IO.Path.Combine("GameData", "root")),
+        IsJap = Argument<bool>("jap"),
         OutputDirectory = Argument("output", "GameData/extracted"),
     };
 });
@@ -102,45 +105,87 @@ Task("Export-TextLists")
         .TransformWith<Po2Binary>()
         .Stream.WriteTo($"{data.TextDirectory}/pokemon.{poExtension}");
 
-    data.GetNode("data/Building.dat")
-        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Building)
-        .TransformWith<Po2Binary>()
-        .Stream.WriteTo($"{data.TextDirectory}/building.{poExtension}");
+    if (data.IsJap) {
+        data.GetNode("data/Building.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.BuildingJap)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/building.{poExtension}");
 
-    data.GetNode("data/EventSpeaker.dat")
-        .TransformWith<Binary2TextList, TextListKind>(TextListKind.EventSpeaker)
-        .TransformWith<Po2Binary>()
-        .Stream.WriteTo($"{data.TextDirectory}/event_speaker.{poExtension}");
+        data.GetNode("data/EventSpeaker.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.EventSpeakerJap)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/event_speaker.{poExtension}");
 
-    data.GetNode("data/Gimmick.dat")
-        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Gimmick)
-        .TransformWith<Po2Binary>()
-        .Stream.WriteTo($"{data.TextDirectory}/gimmick.{poExtension}");
+        data.GetNode("data/Gimmick.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.GimmickJap)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/gimmick.{poExtension}");
 
-    data.GetNode("data/Item.dat")
-        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Item)
-        .TransformWith<Po2Binary>()
-        .Stream.WriteTo($"{data.TextDirectory}/item.{poExtension}");
+        data.GetNode("data/Item.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Item)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/item.{poExtension}");
 
-    data.GetNode("data/Kuni.dat")
-        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Kuni)
-        .TransformWith<Po2Binary>()
-        .Stream.WriteTo($"{data.TextDirectory}/kuni.{poExtension}");
+        data.GetNode("data/Kuni.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.KuniJap)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/kuni.{poExtension}");
 
-    data.GetNode("data/Saihai.dat")
-        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Saihai)
-        .TransformWith<Po2Binary>()
-        .Stream.WriteTo($"{data.TextDirectory}/saihai.{poExtension}");
+        data.GetNode("data/Saihai.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.SaihaiJap)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/saihai.{poExtension}");
 
-    data.GetNode("data/Tokusei.dat")
-        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Tokusei)
-        .TransformWith<Po2Binary>()
-        .Stream.WriteTo($"{data.TextDirectory}/tokusei.{poExtension}");
+        data.GetNode("data/Tokusei.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Tokusei)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/tokusei.{poExtension}");
 
-    data.GetNode("data/Waza.dat")
-        .TransformWith<Binary2TextList, TextListKind>(TextListKind.Waza)
-        .TransformWith<Po2Binary>()
-        .Stream.WriteTo($"{data.TextDirectory}/waza.{poExtension}");
+        data.GetNode("data/Waza.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Waza)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/waza.{poExtension}");
+    } else {
+        data.GetNode("data/Building.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Building)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/building.{poExtension}");
+
+        data.GetNode("data/EventSpeaker.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.EventSpeaker)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/event_speaker.{poExtension}");
+
+        data.GetNode("data/Gimmick.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Gimmick)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/gimmick.{poExtension}");
+
+        data.GetNode("data/Item.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Item)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/item.{poExtension}");
+
+        data.GetNode("data/Kuni.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Kuni)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/kuni.{poExtension}");
+
+        data.GetNode("data/Saihai.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Saihai)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/saihai.{poExtension}");
+
+        data.GetNode("data/Tokusei.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Tokusei)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/tokusei.{poExtension}");
+
+        data.GetNode("data/Waza.dat")
+            .TransformWith<Binary2TextList, TextListKind>(TextListKind.Waza)
+            .TransformWith<Po2Binary>()
+            .Stream.WriteTo($"{data.TextDirectory}/waza.{poExtension}");
+    }
 });
 
 Task("Export-Messages")

@@ -20,11 +20,16 @@ namespace AmbitionConquest.Texts
     public enum TextListKind
     {
         Building,
+        BuildingJap,
         EventSpeaker,
+        EventSpeakerJap,
         Gimmick,
+        GimmickJap,
         Item,
         Kuni,
+        KuniJap,
         Saihai,
+        SaihaiJap,
         Tokusei,
         Waza,
     }

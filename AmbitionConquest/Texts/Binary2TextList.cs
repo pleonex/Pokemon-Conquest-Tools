@@ -34,11 +34,16 @@ namespace AmbitionConquest.Texts
         static readonly IDictionary<TextListKind, Tuple<int, int>> FileInfo =
             new Dictionary<TextListKind, Tuple<int, int>> {
                 { TextListKind.Building,        Tuple.Create(0x12, 0x12) },
+                { TextListKind.BuildingJap,     Tuple.Create(0x0E, 0x12) },
                 { TextListKind.EventSpeaker,    Tuple.Create(0x10, 0x02) },
+                { TextListKind.EventSpeakerJap, Tuple.Create(0x0A, 0x02) },
                 { TextListKind.Gimmick,         Tuple.Create(0x10, 0x18) },
+                { TextListKind.GimmickJap,      Tuple.Create(0x0C, 0x18) },
                 { TextListKind.Item,            Tuple.Create(0x14, 0x10) },
                 { TextListKind.Kuni,            Tuple.Create(0x0A, 0x0E) },
+                { TextListKind.KuniJap,         Tuple.Create(0x06, 0x0E) },
                 { TextListKind.Saihai,          Tuple.Create(0x10, 0x0C) },
+                { TextListKind.SaihaiJap,       Tuple.Create(0x0C, 0x0C) },
                 { TextListKind.Tokusei,         Tuple.Create(0x0E, 0x06) },
                 { TextListKind.Waza,            Tuple.Create(0x0F, 0x15) },
         };

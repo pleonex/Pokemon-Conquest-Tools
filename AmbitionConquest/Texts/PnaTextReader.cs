@@ -173,12 +173,17 @@ namespace AmbitionConquest.Texts
                     ParseTextBound();
                     break;
 
+                // TODO: Investigate meaning, only appears in Jap game: block 22.
+                case 0x09:
+                    builder.Append("{cc:09}");
+                    break;
+
                 case 0x1B:
                     ParseTextFormat();
                     break;
 
                 default:
-                    throw new FormatException("Unsupported control code");
+                    throw new FormatException($"Unsupported control code: {control:X2}");
             }
         }
 
