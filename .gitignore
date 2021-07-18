@@ -28,3 +28,7 @@ bld/
 
 # Python virtual env
 .env
+
+# Ghidra
+*.rep/
+*.gpr
